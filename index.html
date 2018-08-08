@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html wtx-context="FF4526E2-E70C-44E5-900C-5575BADB43F5"><head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>KCCA-Urban Agriculture ValueChain</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<link rel="stylesheet" href="css/leaflet.css">
+	<link rel="stylesheet" href="css/L.css">
+	<script src="js/leaflet.js"></script>
+	<script src="js/jquery-3.1.1.min.js"></script>
+	<link href='css/MarkerCluster.css' rel='stylesheet' />
+	<link href='css/MarkerCluster.Default.css' rel='stylesheet' />
+	<link href='css/kccaUrbanAg.css' rel='stylesheet' />
+	<script type="text/javascript" src="js/Sidebar.js"></script>
+	<link rel="stylesheet" type="text/css" href="css/Sidebar.css">
+	<link href='css/easy-button.css' rel='stylesheet' />
+	<link href='css/icontext.css' rel='stylesheet' />
+
+	<!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.ie.css" /><![endif]-->
+
+	<style>
+		body {
+			padding: 0;
+			margin: 0;
+		}
+
+		html, body, #map {
+			height: 100%;
+		}
+
+		.lorem {
+			font-style: italic;
+			color: #AAA;
+		}
+	</style>
+	</head>
+	<body>
+		<div id="sidebarRight">
+			<h1>Green Space in Kampala</h1>
+			<p><strong>Selected Parish: </strong><span id='parish'></span>
+				<br>
+				<strong>Selected SubCounty: </strong><span id='subCounty'></span></p>
+			<form>
+				<label><input type="radio" name="dataset" value="y2016" checked> 2016</label>
+				<label><input type="radio" name="dataset" value="y2018"> 2018</label>
+			</form>
+		</div>
+		<div id="sidebarLeft">
+		<h4>Legend:</h4>
+			<p></p>
+		</div>
+		<leftbutton id="lefthelpbutton" role="button" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-left"></span><span class="glyphicon glyphicon-chevron-left"></span> LEGEND </leftbutton>
+		<div id="map"></div>
+
+		<script src="js/leaflet-src.js"></script>
+		<script src="js/L.js"></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/d3.v3.min.js"></script>
+		<script src='js/L.Control.Button.js'></script>
+		<script src='js/easy-button.js'></script>
+		<script src='js/leaflet.markercluster-src.js'></script>
+		<script src='js/leaflet-omnivore.js'></script>
+		<script src='./js/L.Control.Button.js'></script>
+
+
+		<script>
+			var map = L.map('map', { zoomControl:false });
+			map.setView([0.3193, 32.5953], 12);
+
+			L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png", {
+				maxZoom: 18,
+				attribution: 'Map data &copy; OpenStreetMap contributors'
+			}).addTo(map);
+
+			var sidebarRight = L.control.sidebar('sidebarRight', {
+				closeButton: true,
+				position: 'right'
+			});
+			map.addControl(sidebarRight);
+			var sidebarLeft = L.control.sidebar('sidebarLeft', {
+				closeButton: false,
+				position: 'left'
+			});
+			map.addControl(sidebarLeft);
+
+			setTimeout(function () {
+				sidebarLeft.show();
+				sidebarRight.show();
+			}, 500);
+
+			var selected;
+
+			function style(feature) {
+				if(feature.properties.SS_GROUP===1){
+					return {
+						color: '#1b9e77',
+						fillOpacity: 0.7
+					};	
+				} else if(feature.properties.SS_GROUP===2){
+					return {
+						color: '#d95f02',
+						fillOpacity: 0.7
+					};	
+				} else if(feature.properties.SS_GROUP===3){
+					return {
+						color: '#7570b3',
+						fillOpacity: 0.7
+					};	
+				} else if(feature.properties.SS_GROUP===4){
+					return {
+						color: '#e7298a',
+						fillOpacity: 0.7
+					};	
+				}
+
+			}
+
+			function getColor(d) {
+				return d > 30  ? '#006d2c' :
+				d > 20  ? '#31a354' :
+				d > 10   ? '#74c476' :
+				d > 5   ? '#bae4b3' :
+				d > 0   ? '#edf8e9' :
+				'#edf8e9';
+			}
+
+			function styleGreenSpace(feature) {
+				return {
+					fillColor: getColor(feature.properties.greenSpace),
+					weight: 2,
+					opacity: 1,
+					color: 'white',
+					dashArray: '3',
+					fillOpacity: 0.7
+				};
+			}
+
+
+			function selectedStyle(feature) {
+				return {
+					color: '#ff5500',
+					fillOpacity: 0,
+					zIndex:10000
+				};
+			}
+
+			function parishOnEachFeature(feature, featureLayer){
+
+				featureLayer.on({
+					click: function(e) {
+
+						selected = [];
+						selected.push(e.target.feature.properties.pname);
+						$.each(map._layers, function (ml) {
+							if(map._layers[ml].feature) {
+								map._layers[ml].setStyle(style());
+								map._layers[ml].feature.properties.selected = false;
+								map._layers[ml].bringToBack();
+							};
+						});
+
+						e.target.feature.properties.selected = true;
+						e.target.setStyle(selectedStyle());
+						e.target.bringToFront();
+
+
+						L.DomEvent.stopPropagation(e); // stop click event from being propagated further
+					}
+				});
+			}
+
+			var markersAgriculture = L.markerClusterGroup({
+				iconCreateFunction: function(cluster) {
+					var childCount = cluster.getChildCount();
+					return L.divIcon({className: 'Agricultureicon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
+				},
+				polygonOptions: {
+					opacity: 0,
+					fillOpacity: 0
+				}
+			});
+
+			var markersMarkets = L.markerClusterGroup({
+				iconCreateFunction: function(cluster) {
+					var childCount = cluster.getChildCount();
+					return L.divIcon({className: 'ClimateChangeicon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
+				},
+				polygonOptions: {
+					opacity: 0,
+					fillOpacity: 0
+				}
+			});
+
+			var markersHotels = L.markerClusterGroup({
+				iconCreateFunction: function(cluster) {
+					var childCount = cluster.getChildCount();
+					return L.divIcon({className: 'EducationIcon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
+				},
+				polygonOptions: {
+					opacity: 0,
+					fillOpacity: 0
+				}
+			});
+
+			var markersFocusGroupDiscussions = L.markerClusterGroup({
+				iconCreateFunction: function(cluster) {
+					var childCount = cluster.getChildCount();
+					return L.divIcon({className: 'EnergyIcon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
+				},
+				polygonOptions: {
+					opacity: 0,
+					fillOpacity: 0
+				}
+			});
+			var markersIndividualProducers = L.markerClusterGroup({
+				iconCreateFunction: function(cluster) {
+					var childCount = cluster.getChildCount();
+					return L.divIcon({className: 'EducationIcon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
+				},
+				polygonOptions: {
+					opacity: 0,
+					fillOpacity: 0
+				}
+			});
+
+			var icons = {
+				Agriculture: L.icon({
+					iconUrl: 'http://www.freeiconspng.com/uploads/orange-agriculture-icon-png-0.png',
+					iconSize: [32, 32],
+					iconAnchor: [15, 0],
+				}),
+				ClimateChange: L.icon({
+					iconUrl: 'http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png',
+					iconSize: [32, 32],
+					iconAnchor: [15, 0],
+				}),
+				Education: L.icon({
+					iconUrl: 'https://static1.squarespace.com/static/5032cfc0e4b00d577d18b5e8/t/538cfc84e4b0369e0b93c54d/1401748877796/icon_nav.png',
+					iconSize: [32, 32],
+					iconAnchor: [15, 0],
+				}),
+				Energy: L.icon({
+					iconUrl: 'http://urbansolutions.ae/img/energy.png',
+					iconSize: [32, 32],
+					iconAnchor: [15, 0],
+				})
+			}
+			var datasetFocusGroup = [];
+
+			var focusGroupDataLayer;
+
+			function eachLayer(marker) {
+				var ltg = marker.toGeoJSON();
+				if (ltg.properties.TYPE === "Individual Producer") {
+					markersIndividualProducers.addLayer(marker);	
+				} else if (ltg.properties.TYPE === "FGD") {
+					datasetFocusGroup.push(ltg.properties);
+				} else if (ltg.properties.TYPE === "Hotel") {
+					markersHotels.addLayer(marker);
+				} else if (ltg.properties.TYPE === "Market") {
+					markersMarkets.addLayer(marker);
+				}
+			}
+			// this can be any kind of omnivore layer
+			var dataset = omnivore.csv('./data/kcca-unicef.csv').on('ready', function() {
+				dataset.eachLayer(eachLayer);
+			});
+
+
+			var dataLayer;
+			var dataLayer1;
+			var dataLayer2;
+
+			$.getJSON('./data/kampalaParishes.geojson', function(data){
+
+				dataLayer = L.geoJson(data, {
+					style: style
+				}).on('click', function () {
+					if(!sidebarRight.isVisible()) {
+						sidebarRight.toggle();
+					}
+
+					d3.select('#sidebarRight').select('svg').remove();
+
+					for (var i = 0; i < data.features.length; i++) {
+						if(selected[0] === data.features[i].properties.pname) {
+							document.getElementById('parish').innerHTML = data.features[i].properties.pname;
+						}
+					}
+				});
+
+				dataLayer1 = L.geoJson(data, {
+					style: styleGreenSpace
+				}).on('click', function () {
+					if(!sidebarRight.isVisible()) {
+						sidebarRight.toggle();
+					}
+
+					d3.select('#sidebarRight').select('svg').remove();
+
+					for (var i = 0; i < data.features.length; i++) {
+						if(selected[0] === data.features[i].properties.pname) {
+							document.getElementById('parish').innerHTML = data.features[i].properties.pname;
+							document.getElementById('subCounty').innerHTML = data.features[i].properties.s;
+						}
+					}
+				});
+
+				dataLayer2 = L.geoJson(data, {
+					style: function(feature){
+						for (var i = 0; i < datasetFocusGroup.length; i++) {
+							if (feature.properties.pname_small === datasetFocusGroup[i].RealParish_individual.toLowerCase() && datasetFocusGroup[i]["Principle enterprise"] === "Mushroom" ){
+								return {
+									color: "#6a3d9a",
+									fillOpacity: 0.7
+								};
+							} else if (feature.properties.pname_small === datasetFocusGroup[i].RealParish_individual.toLowerCase() && datasetFocusGroup[i]["Principle enterprise"] === "Leafy vergetables" ){
+								return {
+									color: "#b15928",
+									fillOpacity: 0.7
+								};
+							}
+						}
+						return {
+								fillOpacity: 0
+							};
+					}
+				}).on('click', function () {
+					if(!sidebarRight.isVisible()) {
+						sidebarRight.toggle();
+					}
+
+					d3.select('#sidebarRight').select('svg').remove();
+
+					for (var i = 0; i < data.features.length; i++) {
+						if(selected[0] === data.features[i].properties.pname) {
+							document.getElementById('parish').innerHTML = data.features[i].properties.pname;
+							document.getElementById('subCounty').innerHTML = data.features[i].properties.s;
+						}
+					}
+				});
+			});
+
+			map.on('click', function () {
+				sidebarRight.hide();
+			})
+
+			var buttons = {
+				Grouping: L.easyButton({
+					position: 'topright',
+					states: [{
+						stateName: 'add-markers',
+						icon: '<img alt="do this" src="http://www.freeiconspng.com/uploads/orange-agriculture-icon-png-0.png" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>Grouping Analysis</b></font></span>',
+						title: 'add random markers',
+						onClick: function(control) {
+							map.addLayer(dataLayer);
+							map.removeLayer(dataLayer1);
+							map.removeLayer(dataLayer2);
+							map.removeLayer(markersIndividualProducers);
+							map.removeLayer(markersFocusGroupDiscussions);
+							map.removeLayer(markersMarkets);
+							map.removeLayer(markersHotels);
+							control.state('remove-markers');
+
+							d3.select('#sidebarRight').selectAll('svg').remove();
+							d3.select('#sidebarLeft').selectAll('svg').remove();
+
+							var dataset = {
+								Average: [37.61752577, 37.45856907, 22.70515464, 2.212371134]
+							};
+
+							drawChart(dataset, "GreenSpace");
+
+
+							var dataset1 = {
+								Average: [81.05979381, 7.65257732, 4.68556701, 5.853608247, 0.628865979, 0.107216495]
+							};
+
+							drawChart(dataset1, "GreenSpace");
+
+							var dataset2 = {
+								Average: [21.06804124, 23.91752577,	3.645360825, 4.474226804, 4.649484536, 2.851546392]
+							};
+
+							drawChart(dataset2, "GreenSpace");
+
+							var dataset3 = {
+								Average: [70.18247423, 29.81752577]
+							};
+
+							drawChart(dataset3, "GreenSpace");
+						}
+					}, {
+						icon: '<img alt="do this" src="http://www.freeiconspng.com/uploads/orange-agriculture-icon-png-0.png" height="40" width="40" align="left"/><span id="text" class="btn--text"><font color="black"><b>Grouping Analysis</b></font></span>',
+						stateName: 'remove-markers',
+						onClick: function(control) {
+							map.removeLayer(dataLayer);
+							control.state('add-markers');
+						},
+						title: 'remove markers'
+					}]
+				}),
+				GreenSpace: L.easyButton({
+					position: 'topright',
+					states: [{
+						stateName: 'add-markers',
+						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>GreenSpace</b></font></span>',
+						title: 'add random markers',
+						onClick: function(control) {
+							map.addLayer(dataLayer1);
+							map.removeLayer(dataLayer);
+							map.removeLayer(dataLayer2);
+							map.removeLayer(markersIndividualProducers);
+							map.removeLayer(markersFocusGroupDiscussions);
+							map.removeLayer(markersMarkets);
+							map.removeLayer(markersHotels);
+							control.state('remove-markers');
+
+							d3.select('#sidebarRight').selectAll('svg').remove();
+							d3.select('#sidebarLeft').selectAll('svg').remove();
+
+							var dataset = {
+								Average: [9.086484227, 90.91351577]
+							};
+
+							drawChart(dataset);
+						}
+					}, {
+						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" /><span id="text" class="btn--text"><font color="black"><b>GreenSpace</b></font></span>',
+						stateName: 'remove-markers',
+						onClick: function(control) {
+							map.removeLayer(dataLayer1);
+							control.state('add-markers');
+						},
+						title: 'remove markers'
+					}]
+				}),
+				focusGroupDiscussion: L.easyButton({
+					position: 'topright',
+					states: [{
+						stateName: 'add-markers',
+						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>Focus Group Discussions</b></font></span>',
+						title: 'add random markers',
+						onClick: function(control) {
+							map.addLayer(dataLayer2);
+							map.removeLayer(dataLayer);
+							map.removeLayer(dataLayer1);
+							map.removeLayer(markersIndividualProducers);
+							map.removeLayer(markersFocusGroupDiscussions);
+							map.removeLayer(markersMarkets);
+							map.removeLayer(markersHotels);
+							control.state('remove-markers');
+
+							d3.select('#sidebarRight').selectAll('svg').remove();
+							d3.select('#sidebarLeft').selectAll('svg').remove();
+
+							var dataset = {
+								Average: [9.086484227, 90.91351577]
+							};
+
+							drawChart(dataset);
+						}
+					}, {
+						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" /><span id="text" class="btn--text"><font color="black"><b>Focus Group Discussions</b></font></span>',
+						stateName: 'remove-markers',
+						onClick: function(control) {
+							map.removeLayer(dataLayer2);
+							control.state('add-markers');
+						},
+						title: 'remove markers'
+					}]
+				}),
+				TrueStories: L.easyButton({
+					position: 'topright',
+					states: [{
+						stateName: 'add-markers',
+						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>True Stories</b></font></span>',
+						title: 'add random markers',
+						onClick: function(control) {
+							map.addLayer(markersIndividualProducers);
+							map.removeLayer(dataLayer);
+							map.removeLayer(dataLayer1);
+							map.removeLayer(dataLayer2);
+							map.removeLayer(markersFocusGroupDiscussions);
+							map.removeLayer(markersMarkets);
+							map.removeLayer(markersHotels);
+							control.state('remove-markers');
+
+							d3.select('#sidebarRight').selectAll('svg').remove();
+							d3.select('#sidebarLeft').selectAll('svg').remove();
+
+							var dataset = {
+								y2016: [32.54477532, 67.45522468],
+								y2018: [14.76830565, 85.23169435]
+							};
+
+							drawChart(dataset);
+
+						}
+					}, {
+						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" /><span id="text" class="btn--text"><font color="black"><b>True Stories</b></font></span>',
+						stateName: 'remove-markers',
+						onClick: function(control) {
+							map.removeLayer(markersIndividualProducers);
+							control.state('add-markers');
+						},
+						title: 'remove markers'
+					}]
+				}),
+				Hotels: L.easyButton({
+					position: 'topright',
+					states: [{
+						stateName: 'add-markers',
+						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>Hotels</b></font></span>',
+						title: 'add random markers',
+						onClick: function(control) {
+							map.addLayer(markersHotels);
+							map.removeLayer(dataLayer);
+							map.removeLayer(dataLayer1);
+							map.removeLayer(dataLayer2);
+							map.removeLayer(markersIndividualProducers);
+							map.removeLayer(markersFocusGroupDiscussions);
+							map.removeLayer(markersMarkets);
+							control.state('remove-markers');
+
+							d3.select('#sidebarRight').selectAll('svg').remove();
+							d3.select('#sidebarLeft').selectAll('svg').remove();
+
+							var dataset = {
+								y2016: [32.54477532, 67.45522468],
+								y2018: [14.76830565, 85.23169435]
+							};
+
+							drawChart(dataset);
+
+						}
+					}, {
+						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" /><span id="text" class="btn--text"><font color="black"><b>Hotels</b></font></span>',
+						stateName: 'remove-markers',
+						onClick: function(control) {
+							map.removeLayer(markersHotels);
+							control.state('add-markers');
+						},
+						title: 'remove markers'
+					}]
+				}),
+				Markets: L.easyButton({
+					position: 'topright',
+					states: [{
+						stateName: 'add-markers',
+						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>Markets</b></font></span>',
+						title: 'add random markers',
+						onClick: function(control) {
+							map.addLayer(markersMarkets);
+							map.removeLayer(dataLayer);
+							map.removeLayer(dataLayer1);
+							map.removeLayer(dataLayer2);
+							map.removeLayer(markersIndividualProducers);
+							map.removeLayer(markersFocusGroupDiscussions);
+							map.removeLayer(markersHotels);
+							control.state('remove-markers');
+
+							d3.select('#sidebarRight').selectAll('svg').remove();
+							d3.select('#sidebarLeft').selectAll('svg').remove();
+
+							var dataset = {
+								y2016: [32.54477532, 67.45522468],
+								y2018: [14.76830565, 85.23169435]
+							};
+
+							drawChart(dataset);
+
+						}
+					}, {
+						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" /><span id="text" class="btn--text"><font color="black"><b>Markets</b></font></span>',
+						stateName: 'remove-markers',
+						onClick: function(control) {
+							map.removeLayer(markersMarkets);
+							control.state('add-markers');
+						},
+						title: 'remove markers'
+					}]
+				})
+
+			}
+
+			function drawChart(dataset, button) {
+				d3.select("input[value=\"y2016\"]").property("checked", true);
+
+				if (button === "GreenSpace") {
+//					console.log(dataset);
+				}
+
+				var width = d3.select("#sidebarRight.leaflet-control").select('h1').style('width').slice(0, -2),
+					height = +(d3.select("#sidebarRight.leaflet-control").select('h1').style('width').slice(0, -2)),
+					radius = Math.min(width, height) / 4;
+				var color = ["#a6cee3","#1f78b4","#b2df8a","#33a02c","#fb9a99","#e31a1c","#fdbf6f","#ff7f00","#cab2d6","#6a3d9a","#ffff99","#b15928","#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00"];
+
+				var pie = d3.layout.pie()
+				.sort(null);
+
+				var arc = d3.svg.arc()
+				.innerRadius(radius - 50)
+				.outerRadius(radius - 20);
+
+				var svg = d3.select('#sidebarRight.leaflet-control').select('h1').append('svg')
+				.attr("width", width/2)
+				.attr("height", height/2)
+				.append('g')
+				.attr("transform", "translate(" +width / 4 + "," + height / 4 + ")");
+
+				var path = svg.datum(dataset).selectAll("path")
+				.data(pie(dataset.Average))
+				.enter().append("path")
+				.attr("fill", function(d, i) { return color[i]; })
+				.attr("d", arc)
+				.each(function(d) { this._current = d; }); // store the initial angles
+
+				d3.selectAll("input")
+					.on("change", change);
+
+//				var timeout = setTimeout(function() {
+//					d3.select("input[value=\"y2018\"]").property("checked", true).each(change);
+//				}, 500);
+
+				function change() {
+					console.log(dataset);
+					var value = this.value;
+					clearTimeout(timeout);
+					// change the value function
+					path = path.data(pie(dataset[this.value])); // compute the new angles
+					path.transition().duration(500).attrTween("d", arcTween); // redraw the arcs
+				}
+
+				function type(d) {
+					d.Average = +d.Average;
+					return d;
+				}
+
+				// Store the displayed angles in _current.
+				// Then, interpolate from _current to the new angles.
+				// During the transition, _current is updated in-place by d3.interpolate.
+				function arcTween(a) {
+					var i = d3.interpolate(this._current, a);
+					this._current = i(0);
+					return function(t) {
+						return arc(i(t));
+					};
+				}
+
+			}
+			// add the buttons. iterates over the buttons objects
+			for (var key in buttons) {
+				if (buttons.hasOwnProperty(key)) {
+					buttons[key].addTo(map)
+				}
+			}
+		</script>
+
+
+	</body></html>

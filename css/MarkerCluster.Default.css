@@ -1,0 +1,104 @@
+#mapid {
+  height: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  position: absolute;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+}
+
+
+.Agricultureicon{
+  background: #FFC100;
+}
+
+.ClimateChangeicon{
+  background: #AAB931;
+}
+
+.EducationIcon{
+  background: #0081A3;
+}
+
+.EnergyIcon{
+  background: #FFB400;
+}
+
+.EnvironmentIcon{
+  background: #A9C938;
+}
+
+.ForestryIcon{
+  background: #007341;
+}
+
+.LandAdminstrationIcon{
+  background: #002360;
+}
+
+.MEIcon{
+  background: #2B79C2;
+}
+
+.PrivateSectorIcon{
+  background: #EF4836;
+}
+
+.WASHIcon{
+  background: #6BCDE3;
+}
+
+.Environicon{
+  background: #82AA78;
+}
+
+.Buildingicon{
+  background: #FFAA3C;
+}
+
+.Washicon{
+  background: #E65032;
+}
+
+.Technicalicon{
+  background: #64A0AA;
+}
+
+.projectImage {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.tableTitle {
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.tableText {
+  font-size: 1em;
+  font-weight: 400;
+}
+
+.imgContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.clusterIcons{
+  border: 2px solid rgba(255,255,255,0.5);
+  opacity: 0.85;
+	text-align: center;
+	font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
+	line-height: 100%;
+  width: 24px !important;
+  height: 24px !important;
+  border-radius: 50%;
+}
+
+.clusterIcons > div {
+  margin-top: 6px;
+}
