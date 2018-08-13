@@ -11,60 +11,20 @@ body {
 }
 
 
-.Agricultureicon{
-  background: #FFC100;
-}
-
-.ClimateChangeicon{
-  background: #AAB931;
-}
-
-.EducationIcon{
-  background: #0081A3;
-}
-
-.EnergyIcon{
+.IndividualProducersIcon{
   background: #FFB400;
 }
 
-.EnvironmentIcon{
-  background: #A9C938;
+.FocusGroupDiscussionsIcon{
+  background: #AAB931;
 }
 
-.ForestryIcon{
-  background: #007341;
+.HotelsIcon{
+  background: #f88379;
 }
 
-.LandAdminstrationIcon{
-  background: #002360;
-}
-
-.MEIcon{
-  background: #2B79C2;
-}
-
-.PrivateSectorIcon{
-  background: #EF4836;
-}
-
-.WASHIcon{
-  background: #6BCDE3;
-}
-
-.Environicon{
-  background: #82AA78;
-}
-
-.Buildingicon{
-  background: #FFAA3C;
-}
-
-.Washicon{
-  background: #E65032;
-}
-
-.Technicalicon{
-  background: #64A0AA;
+.Marketsicon{
+  background: #3B5323;
 }
 
 .projectImage {

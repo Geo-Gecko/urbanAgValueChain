@@ -1,27 +1,77 @@
-#lefthelpbutton{
-     font-family: 'Open Sans', sans-serif;
-     font-size: 13px;
-     line-height: 1vw;
-     text-align: right;
-     top:0.5vw;
-     background-color: #e3784a;
-     color: #52595e;
-     margin: 0;
-     width:;
-     font-weight:bold;
-     font-style: normal;
-     padding: .1em 1em.5em;
-	-webkit-border-radius: .5em; 
-	-moz-border-radius: .5em;
-	border-radius: .5em;
-	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
-	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
-	box-shadow: 0 1px 2px rgba(0,0,0,.2);
-      box-shadow: inset 0 0 1px #FFF, inset 0 1px 7px #EBEBEB, 0 3px 6px -3px #BBB;
-    
-}
 
-#sidebarLeft{
+#legend{
 	bottom:0px !important;
 	position:fixed;
+	width:auto;
+	z-index: 2000;
+}
+
+.head {
+	width: auto;
+	padding: 8px 4px !important;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-overflow-scrolling: touch;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 8px 24px;
+	font-size: 1.1em;
+	background: white;
+	box-shadow: 0 1px 7px rgba(0, 0, 0, 0.65);
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+}
+
+.circle {
+	border-radius: 10px;
+}
+
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700");
+
+#title {
+  width: 50%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background-color: #90A4AE;
+  padding: 1em 0.5em;
+  text-align: left;
+}
+
+td {
+  padding: 0.5em 0 0 0.5em;
+}
+
+tr:nth-of-type(2n) {
+  background-color: #ECEFF1;
+}
+
+
+#sidebarRight > svg{
+	width: 100%;
+	height: auto;
+}
+
+path.slice{
+	stroke-width:2px;
+}
+
+polyline{
+	opacity: .3;
+	stroke: black;
+	stroke-width: 2px;
+	fill: none;
 }

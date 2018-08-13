@@ -36,20 +36,10 @@
 	</style>
 	</head>
 	<body>
+		<div id="legend"></div>
 		<div id="sidebarRight">
-			<h1>Green Space in Kampala</h1>
-			<p><strong>Selected Parish: </strong><span id='parish'></span>
-				<br>
-				<strong>Selected SubCounty: </strong><span id='subCounty'></span></p>
-			<form>
-				<label><input type="radio" name="dataset" value="y2016" checked> 2016</label>
-				<label><input type="radio" name="dataset" value="y2018"> 2018</label>
-			</form>
-		</div>
-		<div id="sidebarLeft">
-		<h4>Legend:</h4>
-			<p></p>
-		</div>
+			<h1></h1>
+		</div>	
 		<div id="map"></div>
 
 		<script src="js/leaflet-src.js"></script>
@@ -67,7 +57,7 @@
 			var map = L.map('map', { zoomControl:false });
 			map.setView([0.3193, 32.5953], 12);
 
-			L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png", {
+			L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png", {
 				maxZoom: 18,
 				attribution: 'Map data &copy; OpenStreetMap contributors'
 			}).addTo(map);
@@ -77,38 +67,39 @@
 				position: 'right'
 			});
 			map.addControl(sidebarRight);
-			var sidebarLeft = L.control.sidebar('sidebarLeft', {
-				closeButton: false,
-				position: 'left'
-			});
-			map.addControl(sidebarLeft);
 
-			setTimeout(function () {
-				sidebarLeft.show();
-				sidebarRight.show();
-			}, 500);
-
-			var selected;
 
 			function style(feature) {
 				if(feature.properties.SS_GROUP===1){
 					return {
-						color: '#1b9e77',
+						fillColor: '#b3cde3',
+						weight: 0.3,
+						opacity: 1,
+						color: 'black',
 						fillOpacity: 0.7
 					};	
 				} else if(feature.properties.SS_GROUP===2){
 					return {
-						color: '#d95f02',
+						fillColor: '#fbb4ae',
+						weight: 0.3,
+						opacity: 1,
+						color: 'black',
 						fillOpacity: 0.7
 					};	
 				} else if(feature.properties.SS_GROUP===3){
 					return {
-						color: '#7570b3',
+						fillColor: '#ccebc5',
+						weight: 0.3,
+						opacity: 1,
+						color: 'black',
 						fillOpacity: 0.7
 					};	
 				} else if(feature.properties.SS_GROUP===4){
 					return {
-						color: '#e7298a',
+						fillColor: '#ffffb2',
+						weight: 0.3,
+						opacity: 1,
+						color: 'black',
 						fillOpacity: 0.7
 					};	
 				}
@@ -116,74 +107,29 @@
 			}
 
 			function getColor(d) {
-				return d > 30  ? '#006d2c' :
+				return d > 30  ? '#006837' :
 				d > 20  ? '#31a354' :
-				d > 10   ? '#74c476' :
-				d > 5   ? '#bae4b3' :
-				d > 0   ? '#edf8e9' :
-				'#edf8e9';
+				d > 10   ? '#78c679' :
+				d > 5   ? '#c2e699' :
+				d > 0   ? '#ffffcc' :
+				'#ffffcc';
 			}
 
 			function styleGreenSpace(feature) {
 				return {
 					fillColor: getColor(feature.properties.greenSpace),
-					weight: 2,
+					weight: 0.3,
 					opacity: 1,
-					color: 'white',
-					dashArray: '3',
+					color: 'black',
 					fillOpacity: 0.7
 				};
 			}
 
 
-			function selectedStyle(feature) {
-				return {
-					color: '#ff5500',
-					fillOpacity: 0,
-					zIndex:10000
-				};
-			}
-
-			function parishOnEachFeature(feature, featureLayer){
-
-				featureLayer.on({
-					click: function(e) {
-
-						selected = [];
-						selected.push(e.target.feature.properties.pname);
-						$.each(map._layers, function (ml) {
-							if(map._layers[ml].feature) {
-								map._layers[ml].setStyle(style());
-								map._layers[ml].feature.properties.selected = false;
-								map._layers[ml].bringToBack();
-							};
-						});
-
-						e.target.feature.properties.selected = true;
-						e.target.setStyle(selectedStyle());
-						e.target.bringToFront();
-
-
-						L.DomEvent.stopPropagation(e); // stop click event from being propagated further
-					}
-				});
-			}
-
-			var markersAgriculture = L.markerClusterGroup({
-				iconCreateFunction: function(cluster) {
-					var childCount = cluster.getChildCount();
-					return L.divIcon({className: 'Agricultureicon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
-				},
-				polygonOptions: {
-					opacity: 0,
-					fillOpacity: 0
-				}
-			});
-
 			var markersMarkets = L.markerClusterGroup({
 				iconCreateFunction: function(cluster) {
 					var childCount = cluster.getChildCount();
-					return L.divIcon({className: 'ClimateChangeicon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
+					return L.divIcon({className: 'Marketsicon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
 				},
 				polygonOptions: {
 					opacity: 0,
@@ -194,7 +140,7 @@
 			var markersHotels = L.markerClusterGroup({
 				iconCreateFunction: function(cluster) {
 					var childCount = cluster.getChildCount();
-					return L.divIcon({className: 'EducationIcon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
+					return L.divIcon({className: 'HotelsIcon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
 				},
 				polygonOptions: {
 					opacity: 0,
@@ -205,7 +151,7 @@
 			var markersFocusGroupDiscussions = L.markerClusterGroup({
 				iconCreateFunction: function(cluster) {
 					var childCount = cluster.getChildCount();
-					return L.divIcon({className: 'EnergyIcon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
+					return L.divIcon({className: 'FocusGroupDiscussionsIcon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
 				},
 				polygonOptions: {
 					opacity: 0,
@@ -215,7 +161,7 @@
 			var markersIndividualProducers = L.markerClusterGroup({
 				iconCreateFunction: function(cluster) {
 					var childCount = cluster.getChildCount();
-					return L.divIcon({className: 'EducationIcon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
+					return L.divIcon({className: 'IndividualProducersIcon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
 				},
 				polygonOptions: {
 					opacity: 0,
@@ -223,46 +169,119 @@
 				}
 			});
 
-			var icons = {
-				Agriculture: L.icon({
-					iconUrl: 'http://www.freeiconspng.com/uploads/orange-agriculture-icon-png-0.png',
-					iconSize: [32, 32],
-					iconAnchor: [15, 0],
-				}),
-				ClimateChange: L.icon({
-					iconUrl: 'http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png',
-					iconSize: [32, 32],
-					iconAnchor: [15, 0],
-				}),
-				Education: L.icon({
-					iconUrl: 'https://static1.squarespace.com/static/5032cfc0e4b00d577d18b5e8/t/538cfc84e4b0369e0b93c54d/1401748877796/icon_nav.png',
-					iconSize: [32, 32],
-					iconAnchor: [15, 0],
-				}),
-				Energy: L.icon({
-					iconUrl: 'http://urbansolutions.ae/img/energy.png',
-					iconSize: [32, 32],
-					iconAnchor: [15, 0],
-				})
-			}
 			var datasetFocusGroup = [];
 
 			var focusGroupDataLayer;
 
 			function eachLayer(marker) {
 				var ltg = marker.toGeoJSON();
-				if (ltg.properties.TYPE === "Individual Producer") {
-					markersIndividualProducers.addLayer(marker);	
+				var popup = L.popup()
+				.setContent("<b>" + ltg.properties.TYPE + ".</b></br>" +
+							"<b>Principle Enterprise: </b>" + ltg.properties["Principle enterprise"] + "</br>" +
+							"<b>Gender: </b>" + ltg.properties.Gender + "</br>" +
+							"<b>Age Group: </b>" + ltg.properties["Age group"] + " years old</br></br></br>" +
+							"<b>Click point for more Information</b>"
+						   );
+				var popupOther = L.popup()
+				.setContent("<b>" + ltg.properties.TYPE + ".</b></br>" +
+							"<b>Name: </b>" + ltg.properties["Interviewee name"] === "_" ? "Not Available" : ltg.properties["Interviewee name"] + "</br>"
+						   );
+
+
+				marker.on('mouseover', function (e) {
+					this.openPopup();
+				});
+				marker.on('mouseout', function (e) {
+					this.closePopup();
+				});
+
+				marker.on('click', function(d) {
+					var questions = [];
+					d3.select('#sidebarRight').select('table').remove();
+					d3.select('#sidebarRight').selectAll('svg').remove();
+
+					var table = d3.select('#sidebarRight').append('table')
+					var thead = table.append('thead')
+					var	tbody = table.append('tbody');
+
+					// append the header row
+					thead.append('tr')
+						.selectAll('th')
+						.data(['Question', 'Answer']).enter()
+						.append('th')
+						.text(function (column) { return column; });
+
+
+					d3.json('./data/questions.json', function (error, list) {
+
+						for (var i = 0; i < list.QuestionsList.length; i++) {
+							for (var i = 0; i < list.QuestionsList.length; i++) {
+								questions.push({Question : list.QuestionsList[i].Question, Answer : d.target.feature.properties[list.QuestionsList[i].Question]});
+							}
+						}
+
+						// create a row for each object in the data
+						var rows = tbody.selectAll('tr')
+						.data(questions)
+						.enter()
+						.append('tr');
+
+						var cells = rows.selectAll('td')
+						.data(function (row) {
+							return ['Question', 'Answer'].map(function (column) {
+								return {column: column, value: row[column]};
+							});
+						})
+						.enter()
+						.append('td')
+						.text(function (d) {return d.value;});
+
+
+					});
+
+				})
+
+
+				if (ltg.properties.TYPE === "Individual Producer" || ltg.properties.TYPE === "Input Supplier" || ltg.properties.TYPE === "Processor" || ltg.properties.TYPE === "Trader" || ltg.properties.TYPE === "Consumer") {
+					markersIndividualProducers.addLayer(marker.on("click", function (){
+						if(!sidebarRight.isVisible()) {
+							sidebarRight.toggle();
+						}
+					}).bindPopup(popup));	
 				} else if (ltg.properties.TYPE === "FGD") {
 					datasetFocusGroup.push(ltg.properties);
 				} else if (ltg.properties.TYPE === "Hotel") {
-					markersHotels.addLayer(marker);
+					markersHotels.addLayer(marker.bindPopup(popupOther));
 				} else if (ltg.properties.TYPE === "Market") {
-					markersMarkets.addLayer(marker);
+					markersMarkets.addLayer(marker.bindPopup(popupOther));
 				}
 			}
+
+			var omnivoreStyleHelper = L.geoJSON(null, {
+				pointToLayer: function (feature, latlng) {
+					function colour(feature) {
+						if (feature.properties.TYPE === "Individual Producer") {
+							return	"#FFB400"
+						} else if (feature.properties.TYPE === "Hotel") {
+							return	"#f88379"
+						} else if (feature.properties.TYPE === "Market") {
+							return	"#3B5323"
+						}
+					}
+					var geojsonMarkerOptions = {
+						radius: 5,
+						fillColor: colour(feature),
+						color: "#000",
+						weight: 1,
+						opacity: 1,
+						fillOpacity: 0.8
+					};
+					return L.circleMarker(latlng, geojsonMarkerOptions);
+				}
+			});
+
 			// this can be any kind of omnivore layer
-			var dataset = omnivore.csv('./data/kcca-unicef.csv').on('ready', function() {
+			var dataset = omnivore.csv('./data/kcca-unicef.csv', null, omnivoreStyleHelper).on('ready', function() {
 				dataset.eachLayer(eachLayer);
 			});
 
@@ -270,40 +289,97 @@
 			var dataLayer;
 			var dataLayer1;
 			var dataLayer2;
+			var dataLayer3;
+
+
+
+			$.getJSON('./data/distanceToMarket.geojson', function(data){
+
+				dataLayer3 = L.geoJson(data, {
+					style: function (feature) {
+						return {
+							weight: 0.3,
+							opacity: 1,
+							color: '#3B5323',	
+							fillOpacity: feature.properties.FromBreak / 3
+						}
+
+					}
+				})
+			});
 
 			$.getJSON('./data/kampalaParishes.geojson', function(data){
-
 				dataLayer = L.geoJson(data, {
 					style: style
-				}).on('click', function () {
+				}).on('click', function (d) {
 					if(!sidebarRight.isVisible()) {
 						sidebarRight.toggle();
 					}
 
-					d3.select('#sidebarRight').select('svg').remove();
 
-					for (var i = 0; i < data.features.length; i++) {
-						if(selected[0] === data.features[i].properties.pname) {
-							document.getElementById('parish').innerHTML = data.features[i].properties.pname;
-						}
-					}
+					d3.select('#sidebarRight').selectAll('svg').remove();
+					d3.select('#sidebarRight').selectAll('table').remove();
+
+					var dataset = [
+						{"label" : "Age Group (0-17)", "value" : d.layer.feature.properties.F_BA_0_17_},
+						{"label" : "Age Group (18-30)", "value" : d.layer.feature.properties.F_18_30_GG},
+						{"label" : "Age Group (31-59)", "value" : d.layer.feature.properties.F_BA31_59},
+						{"label" : "Age Group (60+)", "value" : d.layer.feature.properties.F_BA60_}
+					];
+
+					drawChart(dataset);
+
+
+					var dataset1 = [
+						{"label" : "Iron Sheet", "value" : d.layer.feature.properties.Iron_sheet},
+						{"label" : "Tiles", "value" : d.layer.feature.properties.Tiles},
+						{"label" : "Asbestos", "value" : d.layer.feature.properties.Asbestes},
+						{"label" : "Concrete", "value" : d.layer.feature.properties.Concrete},
+						{"label" : "Tin", "value" : d.layer.feature.properties.Tin},
+						{"label" : "Thatch", "value" : d.layer.feature.properties.Thatch}
+					];
+
+					drawChart(dataset1);
+
+					var dataset2 = [
+						{"label" : "Detatched Houses", "value" : d.layer.feature.properties.Detached_H},
+						{"label" : "Semi Detatched Houses", "value" : d.layer.feature.properties.Semi_Detac},
+						{"label" : "Multiple Rooms", "value" : d.layer.feature.properties.Room_Or_Ro},
+						{"label" : "Servant Quarters", "value" : d.layer.feature.properties.Servant_Qu},
+						{"label" : "Tenement", "value" : d.layer.feature.properties.Tenement__},
+						{"label" : "Other", "value" : d.layer.feature.properties.Others}
+					];
+
+					drawChart(dataset2);
+
+					var dataset3 = [
+						{"label" : "Male Headed", "value" : d.layer.feature.properties.F_Mhhead},
+						{"label" : "Female Headed", "value" : d.layer.feature.properties.F_Fhhead}
+					];
+
+					drawChart(dataset3);
 				});
 
 				dataLayer1 = L.geoJson(data, {
 					style: styleGreenSpace
-				}).on('click', function () {
+				}).on('click', function (d) {
 					if(!sidebarRight.isVisible()) {
 						sidebarRight.toggle();
 					}
 
-					d3.select('#sidebarRight').select('svg').remove();
 
-					for (var i = 0; i < data.features.length; i++) {
-						if(selected[0] === data.features[i].properties.pname) {
-							document.getElementById('parish').innerHTML = data.features[i].properties.pname;
-							document.getElementById('subCounty').innerHTML = data.features[i].properties.s;
-						}
-					}
+					d3.select('#sidebarRight').selectAll('svg').remove();
+
+					d3.select('#sidebarRight').selectAll('table').remove();
+
+					var dataset = [
+						{"label" : "Greenspace", "value" : d.layer.feature.properties.greenSpace},
+						{"label" : "Not Greenspace", "value" : 100 - d.layer.feature.properties.greenSpace}
+					];
+
+					console.log(dataset);
+
+					drawChart(dataset);
 				});
 
 				dataLayer2 = L.geoJson(data, {
@@ -311,46 +387,55 @@
 						for (var i = 0; i < datasetFocusGroup.length; i++) {
 							if (feature.properties.pname_small === datasetFocusGroup[i].RealParish_individual.toLowerCase() && datasetFocusGroup[i]["Principle enterprise"] === "Mushroom" ){
 								return {
-									color: "#6a3d9a",
+									fillColor: "#2b8cbe",
+									weight: 0.3,
+									opacity: 1,
+									color: 'black',
 									fillOpacity: 0.7
 								};
-							} else if (feature.properties.pname_small === datasetFocusGroup[i].RealParish_individual.toLowerCase() && datasetFocusGroup[i]["Principle enterprise"] === "Leafy vergetables" ){
+							} else if (feature.properties.pname_small === datasetFocusGroup[i].RealParish_individual.toLowerCase() && datasetFocusGroup[i]["Principle enterprise"] === "Leafy vegetables" ){
 								return {
-									color: "#b15928",
+									fillColor: "#66c2a4",
+									weight: 0.3,
+									opacity: 1,
+									color: 'black',
 									fillOpacity: 0.7
 								};
 							}
 						}
 						return {
-								fillOpacity: 0
-							};
+							weight: 0.3,
+							opacity: 1,
+							color: 'black',
+							fillOpacity: 0
+						};
 					}
-				}).on('click', function () {
+				}).on('click', function (d) {
 					if(!sidebarRight.isVisible()) {
 						sidebarRight.toggle();
 					}
 
-					d3.select('#sidebarRight').select('svg').remove();
 
-					for (var i = 0; i < data.features.length; i++) {
-						if(selected[0] === data.features[i].properties.pname) {
-							document.getElementById('parish').innerHTML = data.features[i].properties.pname;
-							document.getElementById('subCounty').innerHTML = data.features[i].properties.s;
-						}
-					}
+					d3.select('#sidebarRight').selectAll('svg').remove();
+
+					d3.select('#sidebarRight').selectAll('table').remove();
+
+					var dataset = [
+						{"label" : "Males Interviewed", "value" : 11.86440677966102},
+						{"label" : "Females Interviewed", "value" : 88.13559322033898}
+					];
+
+					drawChart(dataset);
 				});
 			});
 
-			map.on('click', function () {
-				sidebarRight.hide();
-			})
 
 			var buttons = {
 				Grouping: L.easyButton({
 					position: 'topright',
 					states: [{
 						stateName: 'add-markers',
-						icon: '<img alt="do this" src="http://www.freeiconspng.com/uploads/orange-agriculture-icon-png-0.png" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>Grouping Analysis</b></font></span>',
+						icon: '<img alt="Grouping" src="./css/images/th-large-solid.svg" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>Grouping Analysis</b></font></span>',
 						title: 'add random markers',
 						onClick: function(control) {
 							map.addLayer(dataLayer);
@@ -359,39 +444,66 @@
 							map.removeLayer(markersIndividualProducers);
 							map.removeLayer(markersFocusGroupDiscussions);
 							map.removeLayer(markersMarkets);
+							map.removeLayer(dataLayer3);
 							map.removeLayer(markersHotels);
 							control.state('remove-markers');
+							buttons.focusGroupDiscussion.state('add-markers');
+							buttons.GreenSpace.state('add-markers');
+							buttons.Hotels.state('add-markers');
+							buttons.Markets.state('add-markers');
+							buttons.TrueStories.state('add-markers');
+
+
+							var array = ['#b3cde3', '#fbb4ae', '#ccebc5', '#ffffb2'];
+							var arrayLabel = ["Group: 1", "Group: 2", "Group: 3", "Group: 4"];
+
+							addLegend(array, arrayLabel);
+
 
 							d3.select('#sidebarRight').selectAll('svg').remove();
-							d3.select('#sidebarLeft').selectAll('svg').remove();
+							d3.select('#sidebarRight').selectAll('table').remove();
 
-							var dataset = {
-								Average: [37.61752577, 37.45856907, 22.70515464, 2.212371134]
-							};
+							var dataset = [
+								{"label" : "Age Group (0-17)", "value" : 37.61752577},
+								{"label" : "Age Group (18-30)", "value" : 37.45856907},
+								{"label" : "Age Group (31-59)", "value" : 22.70515464},
+								{"label" : "Age Group (60+)", "value" : 2.212371134}
+							];
 
-							drawChart(dataset, "GreenSpace");
+							drawChart(dataset);
 
 
-							var dataset1 = {
-								Average: [81.05979381, 7.65257732, 4.68556701, 5.853608247, 0.628865979, 0.107216495]
-							};
+							var dataset1 = [
+								{"label" : "Iron Sheet", "value" : 81.05979381},
+								{"label" : "Tiles", "value" : 7.65257732},
+								{"label" : "Asbestos", "value" : 4.68556701},
+								{"label" : "Concrete", "value" : 5.853608247},
+								{"label" : "Tin", "value" : 0.628865979},
+								{"label" : "Thatch", "value" : 0.107216495}
+							];
 
-							drawChart(dataset1, "GreenSpace");
+							drawChart(dataset1);
 
-							var dataset2 = {
-								Average: [21.06804124, 23.91752577,	3.645360825, 4.474226804, 4.649484536, 2.851546392]
-							};
+							var dataset2 = [
+								{"label" : "Detatched Houses", "value" : 21.06804124},
+								{"label" : "Semi Detatched Houses", "value" : 23.91752577},
+								{"label" : "Multiple Rooms", "value" : 3.645360825},
+								{"label" : "Servant Quarters", "value" : 4.474226804},
+								{"label" : "Tenement", "value" : 4.649484536},
+								{"label" : "Other", "value" : 2.851546392}
+							];
 
-							drawChart(dataset2, "GreenSpace");
+							drawChart(dataset2);
 
-							var dataset3 = {
-								Average: [70.18247423, 29.81752577]
-							};
+							var dataset3 = [
+								{"label" : "Male Headed", "value" : 70.18247423},
+								{"label" : "Female Headed", "value" : 29.81752577}
+							];
 
-							drawChart(dataset3, "GreenSpace");
+							drawChart(dataset3);
 						}
 					}, {
-						icon: '<img alt="do this" src="http://www.freeiconspng.com/uploads/orange-agriculture-icon-png-0.png" height="40" width="40" align="left"/><span id="text" class="btn--text"><font color="black"><b>Grouping Analysis</b></font></span>',
+						icon: '<img alt="Grouping" src="./css/images/th-large-solid-On.svg" height="40" width="40" align="left"/><span id="text" class="btn--text"><font color="black"><b>Grouping Analysis</b></font></span>',
 						stateName: 'remove-markers',
 						onClick: function(control) {
 							map.removeLayer(dataLayer);
@@ -404,7 +516,7 @@
 					position: 'topright',
 					states: [{
 						stateName: 'add-markers',
-						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>GreenSpace</b></font></span>',
+						icon: '<img alt="GreenSpace" src="./css/images/leaf-solid.svg" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>GreenSpace</b></font></span>',
 						title: 'add random markers',
 						onClick: function(control) {
 							map.addLayer(dataLayer1);
@@ -414,19 +526,32 @@
 							map.removeLayer(markersFocusGroupDiscussions);
 							map.removeLayer(markersMarkets);
 							map.removeLayer(markersHotels);
+							map.removeLayer(dataLayer3);
 							control.state('remove-markers');
+							buttons.focusGroupDiscussion.state('add-markers');
+							buttons.Grouping.state('add-markers');
+							buttons.Hotels.state('add-markers');
+							buttons.Markets.state('add-markers');
+							buttons.TrueStories.state('add-markers');
+
 
 							d3.select('#sidebarRight').selectAll('svg').remove();
-							d3.select('#sidebarLeft').selectAll('svg').remove();
+							d3.select('#sidebarRight').selectAll('table').remove();
 
-							var dataset = {
-								Average: [9.086484227, 90.91351577]
-							};
+							var array = ['#ffffcc', '#c2e699', '#78c679', '#31a354', '#006837'];
+							var arrayLabel = ["0% - 5%", "6% - 10%", "11% - 20%", "21% - 30%", "31% and above"];
+
+							addLegend(array, arrayLabel);
+
+							var dataset = [
+								{"label" : "Greenspace", "value" : 9.086484227},
+								{"label" : "Not Greenspace", "value" : 90.913515773}
+							];
 
 							drawChart(dataset);
 						}
 					}, {
-						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" /><span id="text" class="btn--text"><font color="black"><b>GreenSpace</b></font></span>',
+						icon: '<img alt="GreenSpace" src="./css/images/leaf-solid-On.svg" height="40" width="40" align="left"/><span id="text" class="btn--text"><font color="black"><b>GreenSpace</b></font></span>',
 						stateName: 'remove-markers',
 						onClick: function(control) {
 							map.removeLayer(dataLayer1);
@@ -439,7 +564,7 @@
 					position: 'topright',
 					states: [{
 						stateName: 'add-markers',
-						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>Focus Group Discussions</b></font></span>',
+						icon: '<img alt="focusGroupDiscussion" src="./css/images/users-solid.svg" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>Focus Group Discussions</b></font></span>',
 						title: 'add random markers',
 						onClick: function(control) {
 							map.addLayer(dataLayer2);
@@ -448,20 +573,34 @@
 							map.removeLayer(markersIndividualProducers);
 							map.removeLayer(markersFocusGroupDiscussions);
 							map.removeLayer(markersMarkets);
+							map.removeLayer(dataLayer3);
 							map.removeLayer(markersHotels);
 							control.state('remove-markers');
+							buttons.GreenSpace.state('add-markers');
+							buttons.Grouping.state('add-markers');
+							buttons.Hotels.state('add-markers');
+							buttons.Markets.state('add-markers');
+							buttons.TrueStories.state('add-markers');
+
+
+							var array = ['#2b8cbe', '#66c2a4'];
+							var arrayLabel = ["Mushrooms", "Leafy Vegetables"];
+
+							addLegend(array, arrayLabel);
+
 
 							d3.select('#sidebarRight').selectAll('svg').remove();
-							d3.select('#sidebarLeft').selectAll('svg').remove();
+							d3.select('#sidebarRight').selectAll('table').remove();
 
-							var dataset = {
-								Average: [9.086484227, 90.91351577]
-							};
+							var dataset = [
+								{"label" : "Males Interviewed", "value" : 11.86440677966102},
+								{"label" : "Females Interviewed", "value" : 88.13559322033898}
+							];
 
 							drawChart(dataset);
 						}
 					}, {
-						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" /><span id="text" class="btn--text"><font color="black"><b>Focus Group Discussions</b></font></span>',
+						icon: '<img alt="focusGroupDiscussion" src="./css/images/users-solid-On.svg" height="40" width="40" align="left"/><span id="text" class="btn--text"><font color="black"><b>Focus Group Discussions</b></font></span>',
 						stateName: 'remove-markers',
 						onClick: function(control) {
 							map.removeLayer(dataLayer2);
@@ -474,7 +613,7 @@
 					position: 'topright',
 					states: [{
 						stateName: 'add-markers',
-						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>True Stories</b></font></span>',
+						icon: '<img alt="TrueStories" src="./css/images/user-solid.svg" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>True Stories</b></font></span>',
 						title: 'add random markers',
 						onClick: function(control) {
 							map.addLayer(markersIndividualProducers);
@@ -484,21 +623,31 @@
 							map.removeLayer(markersFocusGroupDiscussions);
 							map.removeLayer(markersMarkets);
 							map.removeLayer(markersHotels);
+							map.removeLayer(dataLayer3);
 							control.state('remove-markers');
+							buttons.focusGroupDiscussion.state('add-markers');
+							buttons.GreenSpace.state('add-markers');
+							buttons.Grouping.state('add-markers');
+							buttons.Hotels.state('add-markers');
+							buttons.Markets.state('add-markers');
+
+
+							d3.select('#legend').select('svg').remove();
+
 
 							d3.select('#sidebarRight').selectAll('svg').remove();
-							d3.select('#sidebarLeft').selectAll('svg').remove();
+							d3.select('#sidebarRight').selectAll('table').remove();
 
-							var dataset = {
-								y2016: [32.54477532, 67.45522468],
-								y2018: [14.76830565, 85.23169435]
-							};
+							var dataset = [
+								{"label" : "Males Interviewed", "value" : 24.32432432432432},
+								{"label" : "Females Interviewed", "value" : 75.67567567567568}
+							];
 
 							drawChart(dataset);
 
 						}
 					}, {
-						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" /><span id="text" class="btn--text"><font color="black"><b>True Stories</b></font></span>',
+						icon: '<img alt="TrueStories" src="./css/images/user-solid-On.svg" height="40" width="40" align="left"/><span id="text" class="btn--text"><font color="black"><b>True Stories</b></font></span>',
 						stateName: 'remove-markers',
 						onClick: function(control) {
 							map.removeLayer(markersIndividualProducers);
@@ -511,7 +660,7 @@
 					position: 'topright',
 					states: [{
 						stateName: 'add-markers',
-						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>Hotels</b></font></span>',
+						icon: '<img alt="Hotels" src="./css/images/concierge-bell-solid.svg" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>Hotels</b></font></span>',
 						title: 'add random markers',
 						onClick: function(control) {
 							map.addLayer(markersHotels);
@@ -521,21 +670,28 @@
 							map.removeLayer(markersIndividualProducers);
 							map.removeLayer(markersFocusGroupDiscussions);
 							map.removeLayer(markersMarkets);
+							map.removeLayer(dataLayer3);
 							control.state('remove-markers');
+							buttons.focusGroupDiscussion.state('add-markers');
+							buttons.GreenSpace.state('add-markers');
+							buttons.Grouping.state('add-markers');
+							buttons.Markets.state('add-markers');
+							buttons.TrueStories.state('add-markers');
+
+							d3.select('#legend').select('svg').remove();
+
+							if(sidebarRight.isVisible()) {
+								sidebarRight.toggle();
+							}
+
 
 							d3.select('#sidebarRight').selectAll('svg').remove();
-							d3.select('#sidebarLeft').selectAll('svg').remove();
+							d3.select('#sidebarRight').selectAll('table').remove();
 
-							var dataset = {
-								y2016: [32.54477532, 67.45522468],
-								y2018: [14.76830565, 85.23169435]
-							};
-
-							drawChart(dataset);
 
 						}
 					}, {
-						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" /><span id="text" class="btn--text"><font color="black"><b>Hotels</b></font></span>',
+						icon: '<img alt="Hotels" src="./css/images/concierge-bell-solid-On.svg" height="40" width="40" align="left"/><span id="text" class="btn--text"><font color="black"><b>Hotels</b></font></span>',
 						stateName: 'remove-markers',
 						onClick: function(control) {
 							map.removeLayer(markersHotels);
@@ -548,10 +704,11 @@
 					position: 'topright',
 					states: [{
 						stateName: 'add-markers',
-						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>Markets</b></font></span>',
+						icon: '<img alt="Markets" src="./css/images/shopping-basket-solid.svg" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>Markets</b></font></span>',
 						title: 'add random markers',
 						onClick: function(control) {
 							map.addLayer(markersMarkets);
+							map.addLayer(dataLayer3);
 							map.removeLayer(dataLayer);
 							map.removeLayer(dataLayer1);
 							map.removeLayer(dataLayer2);
@@ -559,23 +716,36 @@
 							map.removeLayer(markersFocusGroupDiscussions);
 							map.removeLayer(markersHotels);
 							control.state('remove-markers');
+							buttons.focusGroupDiscussion.state('add-markers');
+							buttons.GreenSpace.state('add-markers');
+							buttons.Grouping.state('add-markers');
+							buttons.Hotels.state('add-markers');
+							buttons.TrueStories.state('add-markers');
+
+							var array = ['#2b8cbe', '#66c2a4'];
+							var arrayLabel = ["Mushrooms", "Leafy Vegetables"];
+
+							addLegend(array, arrayLabel);
+
+							if(sidebarRight.isVisible()) {
+								sidebarRight.toggle();
+							}
+
+
 
 							d3.select('#sidebarRight').selectAll('svg').remove();
-							d3.select('#sidebarLeft').selectAll('svg').remove();
 
-							var dataset = {
-								y2016: [32.54477532, 67.45522468],
-								y2018: [14.76830565, 85.23169435]
-							};
+							d3.select('#sidebarRight').selectAll('table').remove();
 
-							drawChart(dataset);
+
 
 						}
 					}, {
-						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" /><span id="text" class="btn--text"><font color="black"><b>Markets</b></font></span>',
+						icon: '<img alt="Markets" src="./css/images/shopping-basket-solid-On.svg" height="40" width="40" align="left"/><span id="text" class="btn--text"><font color="black"><b>Markets</b></font></span>',
 						stateName: 'remove-markers',
 						onClick: function(control) {
 							map.removeLayer(markersMarkets);
+							map.removeLayer(dataLayer3);
 							control.state('add-markers');
 						},
 						title: 'remove markers'
@@ -584,69 +754,262 @@
 
 			}
 
-			function drawChart(dataset, button) {
-				d3.select("input[value=\"y2016\"]").property("checked", true);
+			function addLegend(array, arrayLabel) {
+				d3.select('#legend').select('svg').remove();
+				var legendSvg = d3.select('#legend')
+				.append('svg')
+				.attr('class', 'head')
+				.attr('width', 200)
+				.attr('height', 150);
 
-				if (button === "GreenSpace") {
-//					console.log(dataset);
-				}
 
-				var width = d3.select("#sidebarRight.leaflet-control").select('h1').style('width').slice(0, -2),
+				var legendX = 0;
+				var legendDY = 20;
+				legendSvg.selectAll('.legend-rect')
+					.data(array)
+					.enter()
+					.append('rect')
+					.attr('class', 'legend-rect')
+					.attr("x", legendX)
+					.attr("y", function (d, i) {
+					return (i + 1) * legendDY;
+				})
+					.attr("width", 20)
+					.attr("height", 20)
+					.style("stroke", "black")
+					.style("stroke-width", 0)
+					.style("fill", function (d, i) {
+					return array[i];
+				});
+				//the data objects are the fill colors
+
+				legendSvg.selectAll('.legend-text')
+					.data(array)
+					.enter()
+					.append('text')
+					.attr('class', 'legend-text')
+					.style('color', 'white')
+					.attr("x", legendX + 25)
+					.attr("y", function (d, i) {
+					return (i) * legendDY + 25;
+				})
+					.attr("dy", "0.8em") //place text one line *below* the x,y point
+					.text(function (d, i) {
+					return arrayLabel[i];
+				});
+
+				legendSvg.selectAll('.legend-title')
+					.data(["Legend"])
+					.enter()
+					.append('text')
+					.attr('class', 'legend-title')
+					.attr("x", legendX)
+					.attr("y", 0)
+					.attr("dy", "0.8em") //place text one line *below* the x,y point
+					.text(function (d, i) {
+					return d;
+				});
+			}
+
+			function drawChart(dataset) {
+
+				var svg = d3.select("#sidebarRight")
+				.append("svg")
+				.append("g")
+				.attr("height", "4vh");
+
+				svg.append("g")
+					.attr("class", "slices");
+				svg.append("g")
+					.attr("class", "labels");
+				svg.append("g")
+					.attr("class", "lines");
+
+				var width = +(d3.select("#sidebarRight.leaflet-control").select('h1').style('width').slice(0, -2)),
 					height = +(d3.select("#sidebarRight.leaflet-control").select('h1').style('width').slice(0, -2)),
-					radius = Math.min(width, height) / 4;
-				var color = ["#a6cee3","#1f78b4","#b2df8a","#33a02c","#fb9a99","#e31a1c","#fdbf6f","#ff7f00","#cab2d6","#6a3d9a","#ffff99","#b15928","#e41a1c","#377eb8","#4daf4a","#984ea3","#ff7f00"];
+					radius = Math.min(width, height) / 8;
 
 				var pie = d3.layout.pie()
-				.sort(null);
+				.sort(null)
+				.value(function(d) {
+					return d.value;
+				});
 
 				var arc = d3.svg.arc()
-				.innerRadius(radius - 50)
-				.outerRadius(radius - 20);
+				.outerRadius(radius * 0.8)
+				.innerRadius(radius * 0.4);
 
-				var svg = d3.select('#sidebarRight.leaflet-control').select('h1').append('svg')
-				.attr("width", width/2)
-				.attr("height", height/2)
-				.append('g')
-				.attr("transform", "translate(" +width / 4 + "," + height / 4 + ")");
+				var outerArc = d3.svg.arc()
+				.innerRadius(radius * 0.9)
+				.outerRadius(radius * 0.9);
 
-				var path = svg.datum(dataset).selectAll("path")
-				.data(pie(dataset.Average))
-				.enter().append("path")
-				.attr("fill", function(d, i) { return color[i]; })
-				.attr("d", arc)
-				.each(function(d) { this._current = d; }); // store the initial angles
+				svg.attr("transform", "translate(" + width  / 2 + "," + height / 4 + ")");
 
-				d3.selectAll("input")
-					.on("change", change);
+				var key = function(d){ return d.data.label; };
 
-//				var timeout = setTimeout(function() {
-//					d3.select("input[value=\"y2018\"]").property("checked", true).each(change);
-//				}, 500);
+				var color = d3.scale.category20()
+				//				.domain(["Age Group (0-17)", "Age Group (18-30)", "Age Group (31-59)", "Age Group (60+)"])
+				//.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 
-				function change() {
-					console.log(dataset);
-					var value = this.value;
-					clearTimeout(timeout);
-					// change the value function
-					path = path.data(pie(dataset[this.value])); // compute the new angles
-					path.transition().duration(500).attrTween("d", arcTween); // redraw the arcs
+
+				function Data (dataset){
+					var labels = color.domain();
+					return dataset.map(function(label){
+						return { label: label.label, value: label.value }
+					}).filter(function(d) {
+						return d.value > 5;
+					}).sort(function(a,b) {
+						return d3.ascending(a.label, b.label);
+					});
 				}
 
-				function type(d) {
-					d.Average = +d.Average;
-					return d;
+				change(Data(dataset));
+
+				function mergeWithFirstEqualZero(first, second){
+					var secondSet = d3.set(); second.forEach(function(d) { secondSet.add(d.label); });
+
+					var onlyFirst = first
+					.filter(function(d){ return !secondSet.has(d.label) })
+					.map(function(d) { return {label: d.label, value: 0}; });
+					return d3.merge([ second, onlyFirst ])
+						.sort(function(a,b) {
+						return d3.ascending(a.label, b.label);
+					});
 				}
 
-				// Store the displayed angles in _current.
-				// Then, interpolate from _current to the new angles.
-				// During the transition, _current is updated in-place by d3.interpolate.
-				function arcTween(a) {
-					var i = d3.interpolate(this._current, a);
-					this._current = i(0);
-					return function(t) {
-						return arc(i(t));
-					};
-				}
+				function change(data) {
+					var duration = 500;
+					var data0 = svg.select(".slices").selectAll("path.slice")
+					.data().map(function(d) { return d.data });
+					if (data0.length == 0) data0 = data;
+					var was = mergeWithFirstEqualZero(data, data0);
+					var is = mergeWithFirstEqualZero(data0, data);
+
+					/* ------- SLICE ARCS -------*/
+
+					var slice = svg.select(".slices").selectAll("path.slice")
+					.data(pie(was), key);
+
+					slice.enter()
+						.insert("path")
+						.attr("class", "slice")
+						.style("fill", function(d) { return color(d.data.label); })
+						.each(function(d) {
+						this._current = d;
+					});
+
+					slice = svg.select(".slices").selectAll("path.slice")
+						.data(pie(is), key);
+
+					slice		
+						.transition().duration(duration)
+						.attrTween("d", function(d) {
+						var interpolate = d3.interpolate(this._current, d);
+						var _this = this;
+						return function(t) {
+							_this._current = interpolate(t);
+							return arc(_this._current);
+						};
+					});
+
+					slice = svg.select(".slices").selectAll("path.slice")
+						.data(pie(data), key);
+
+					slice
+						.exit().transition().delay(duration).duration(0)
+						.remove();
+					/* ------- TEXT LABELS -------*/
+
+					var text = svg.select(".labels").selectAll("text")
+					.data(pie(was), key);
+
+					text.enter()
+						.append("text")
+						.attr("dy", ".35em")
+						.style("opacity", 0)
+						.text(function(d) {
+						return d.data.label;
+					})
+						.each(function(d) {
+						this._current = d;
+					});
+
+					function midAngle(d){
+						return d.startAngle + (d.endAngle - d.startAngle)/2;
+					}
+
+					text = svg.select(".labels").selectAll("text")
+						.data(pie(is), key);
+
+					text.transition().duration(duration)
+						.style("opacity", function(d) {
+						return d.data.value == 0 ? 0 : 1;
+					})
+						.attrTween("transform", function(d) {
+						var interpolate = d3.interpolate(this._current, d);
+						var _this = this;
+						return function(t) {
+							var d2 = interpolate(t);
+							_this._current = d2;
+							var pos = outerArc.centroid(d2);
+							pos[0] = radius * (midAngle(d2) < Math.PI ? 1 : -1);
+							return "translate("+ pos +")";
+						};
+					})
+						.styleTween("text-anchor", function(d){
+						var interpolate = d3.interpolate(this._current, d);
+						return function(t) {
+							var d2 = interpolate(t);
+							return midAngle(d2) < Math.PI ? "start":"end";
+						};
+					});
+
+					text = svg.select(".labels").selectAll("text")
+						.data(pie(data), key);
+
+					text
+						.exit().transition().delay(duration)
+						.remove();
+
+					/* ------- SLICE TO TEXT POLYLINES -------*/
+
+					var polyline = svg.select(".lines").selectAll("polyline")
+					.data(pie(was), key);
+
+					polyline.enter()
+						.append("polyline")
+						.style("opacity", 0)
+						.each(function(d) {
+						this._current = d;
+					});
+
+					polyline = svg.select(".lines").selectAll("polyline")
+						.data(pie(is), key);
+
+					polyline.transition().duration(duration)
+						.style("opacity", function(d) {
+						return d.data.value == 0 ? 0 : .5;
+					})
+						.attrTween("points", function(d){
+						this._current = this._current;
+						var interpolate = d3.interpolate(this._current, d);
+						var _this = this;
+						return function(t) {
+							var d2 = interpolate(t);
+							_this._current = d2;
+							var pos = outerArc.centroid(d2);
+							pos[0] = radius * 0.95 * (midAngle(d2) < Math.PI ? 1 : -1);
+							return [arc.centroid(d2), outerArc.centroid(d2), pos];
+						};			
+					});
+
+					polyline = svg.select(".lines").selectAll("polyline")
+						.data(pie(data), key);
+
+					polyline
+						.exit().transition().delay(duration)
+						.remove();
+				};
 
 			}
 			// add the buttons. iterates over the buttons objects
