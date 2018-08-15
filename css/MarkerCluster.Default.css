@@ -19,6 +19,22 @@ body {
   background: #AAB931;
 }
 
+.InputSuppliersIcon{
+  background: #377eb8;
+}
+
+.ProcessorsIcon{
+  background: #984ea3;
+}
+
+.TradersIcon{
+  background: #f781bf;
+}
+
+.ConsumersIcon{
+  background: #a65628;
+}
+
 .HotelsIcon{
   background: #f88379;
 }

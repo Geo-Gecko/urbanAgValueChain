@@ -75,3 +75,8 @@ polyline{
 	stroke-width: 2px;
 	fill: none;
 }
+.legend-title {
+    font-size: 12.5px !important;
+    font-weight: bold !important;
+    color: #000;
+}
