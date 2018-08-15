@@ -58,6 +58,8 @@
 
 		<script>
 			var map = L.map('map');
+			
+			map.on('load', onMapLoad);
 			map.setView([0.3193, 32.5953], 12);
 			
 			map.bounds = [],
@@ -65,6 +67,11 @@
 			[0.6733,32.057],
 			[-0.04,33.05]
 		]);
+			
+			function onMapLoad() {
+					console.log(20);
+					$('#textGreenspace').click();
+			}
 
 			L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png", {
 				maxZoom: 18,
@@ -465,7 +472,9 @@
 
 				dataLayer1 = L.geoJson(data, {
 					style: styleGreenSpace
-				}).on('click', function (d) {
+				}).addTo(map)
+					
+					dataLayer1.on('click', function (d) {
 					if(!sidebarRight.isVisible()) {
 						sidebarRight.toggle();
 					}
@@ -484,6 +493,7 @@
 
 					drawChart(dataset);
 				});
+				
 
 				dataLayer2 = L.geoJson(data, {
 					style: function(feature){
@@ -544,7 +554,7 @@
 						.text(function (column) { return column; });
 
 
-					d3.json('./data/questions.json', function (error, list) {
+					d3.json('./data/questionsAll.json', function (error, list) {
 
 						var dataset = [];
 						var arrayAnswers = [];
@@ -602,6 +612,9 @@
 
 
 				});
+			}).done(function(){
+				
+				buttons.GreenSpace.state('remove-markers');
 			});
 
 
@@ -1260,14 +1273,6 @@
 				}
 			}
 
-		</script>
-		<script>
-			(function($){
-				setTimeout(function(){
-					$('#textGreenspace').click();
-				}, 1000);
-
-			})(jQuery)
 		</script>
 
 
