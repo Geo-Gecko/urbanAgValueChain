@@ -39,6 +39,9 @@
 		<div id="legend"></div>
 		<div id="sidebarRight">
 			<h1></h1>
+			<p><strong>Selected Parish: </strong><span id='parish'></span>
+				<br>
+				<strong>Selected SubCounty: </strong><span id='subCounty'></span></p>
 		</div>	
 		<div id="map"></div>
 
@@ -54,12 +57,21 @@
 
 
 		<script>
-			var map = L.map('map', { zoomControl:false });
+			var map = L.map('map');
 			map.setView([0.3193, 32.5953], 12);
+			
+			map.bounds = [],
+			map.setMaxBounds([
+			[0.6733,32.057],
+			[-0.04,33.05]
+		]);
 
 			L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png", {
 				maxZoom: 18,
-				attribution: 'Map data &copy; OpenStreetMap contributors'
+				attribution: 'Powered by: <br> &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">Carto</a><br><a href="https://www.kcca.go.ug/" target="_blank"><img style="right: 0; width: 6em;" src="css/images/kcca_logo.svg" alt="KCCA"></a>&nbsp&nbsp<a href="https://geogecko.com/" target="_blank"><img style="right: 0; width: 12em" src="css/images/logo-full-no-text.svg" alt="GeoGecko"></a>',
+				subdomains: 'abcd',
+				minZoom: 12,	
+				maxZoom: 19
 			}).addTo(map);
 
 			var sidebarRight = L.control.sidebar('sidebarRight', {
@@ -147,6 +159,50 @@
 					fillOpacity: 0
 				}
 			});
+			
+			var markersInputSuppliers = L.markerClusterGroup({
+				iconCreateFunction: function(cluster) {
+					var childCount = cluster.getChildCount();
+					return L.divIcon({className: 'InputSuppliersIcon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
+				},
+				polygonOptions: {
+					opacity: 0,
+					fillOpacity: 0
+				}
+			});
+			
+			var markersProcessors = L.markerClusterGroup({
+				iconCreateFunction: function(cluster) {
+					var childCount = cluster.getChildCount();
+					return L.divIcon({className: 'ProcessorsIcon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
+				},
+				polygonOptions: {
+					opacity: 0,
+					fillOpacity: 0
+				}
+			});
+			
+			var markersTraders = L.markerClusterGroup({
+				iconCreateFunction: function(cluster) {
+					var childCount = cluster.getChildCount();
+					return L.divIcon({className: 'TradersIcon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
+				},
+				polygonOptions: {
+					opacity: 0,
+					fillOpacity: 0
+				}
+			});
+			
+			var markersConsumers = L.markerClusterGroup({
+				iconCreateFunction: function(cluster) {
+					var childCount = cluster.getChildCount();
+					return L.divIcon({className: 'ConsumersIcon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
+				},
+				polygonOptions: {
+					opacity: 0,
+					fillOpacity: 0
+				}
+			});
 
 			var markersFocusGroupDiscussions = L.markerClusterGroup({
 				iconCreateFunction: function(cluster) {
@@ -212,8 +268,8 @@
 						.text(function (column) { return column; });
 
 
-					d3.json('./data/questions.json', function (error, list) {
-
+					d3.json('./data/questionsAll.json', function (error, list) {
+						var listName = ltg.properties.TYPE
 						for (var i = 0; i < list.QuestionsList.length; i++) {
 							for (var i = 0; i < list.QuestionsList.length; i++) {
 								questions.push({Question : list.QuestionsList[i].Question, Answer : d.target.feature.properties[list.QuestionsList[i].Question]});
@@ -229,27 +285,56 @@
 						var cells = rows.selectAll('td')
 						.data(function (row) {
 							return ['Question', 'Answer'].map(function (column) {
-								return {column: column, value: row[column]};
+								return {column: column, value: row[column]};	
 							});
 						})
 						.enter()
 						.append('td')
-						.text(function (d) {return d.value;});
+						.text(function (d) {
+							return d.value;});
 
 
 					});
 
 				})
 
-
-				if (ltg.properties.TYPE === "Individual Producer" || ltg.properties.TYPE === "Input Supplier" || ltg.properties.TYPE === "Processor" || ltg.properties.TYPE === "Trader" || ltg.properties.TYPE === "Consumer") {
+				if (ltg.properties.TYPE === "Individual Producer") {
 					markersIndividualProducers.addLayer(marker.on("click", function (){
+						if(!sidebarRight.isVisible()) {
+							sidebarRight.toggle();
+						}
+					}).bindPopup(popup));	
+				} else if (ltg.properties.TYPE === "Input Supplier") {
+					markersInputSuppliers.addLayer(marker.on("click", function (){
+						if(!sidebarRight.isVisible()) {
+							sidebarRight.toggle();
+						}
+					}).bindPopup(popup));	
+				} else if (ltg.properties.TYPE === "Processor") {
+					markersProcessors.addLayer(marker.on("click", function (){
+						if(!sidebarRight.isVisible()) {
+							sidebarRight.toggle();
+						}
+					}).bindPopup(popup));	
+				} else if (ltg.properties.TYPE === "Trader") {
+					markersTraders.addLayer(marker.on("click", function (){
+						if(!sidebarRight.isVisible()) {
+							sidebarRight.toggle();
+						}
+					}).bindPopup(popup));	
+				} else if (ltg.properties.TYPE === "Consumer") {
+					markersConsumers.addLayer(marker.on("click", function (){
 						if(!sidebarRight.isVisible()) {
 							sidebarRight.toggle();
 						}
 					}).bindPopup(popup));	
 				} else if (ltg.properties.TYPE === "FGD") {
 					datasetFocusGroup.push(ltg.properties);
+					markersFocusGroupDiscussions.addLayer(marker.on("click", function (){
+						if(!sidebarRight.isVisible()) {
+							sidebarRight.toggle();
+						}
+					}).bindPopup(popup));
 				} else if (ltg.properties.TYPE === "Hotel") {
 					markersHotels.addLayer(marker.bindPopup(popupOther));
 				} else if (ltg.properties.TYPE === "Market") {
@@ -260,13 +345,24 @@
 			var omnivoreStyleHelper = L.geoJSON(null, {
 				pointToLayer: function (feature, latlng) {
 					function colour(feature) {
+						console.log(feature.properties.TYPE);
 						if (feature.properties.TYPE === "Individual Producer") {
 							return	"#FFB400"
 						} else if (feature.properties.TYPE === "Hotel") {
 							return	"#f88379"
 						} else if (feature.properties.TYPE === "Market") {
 							return	"#3B5323"
-						}
+						} else if (feature.properties.TYPE === "FGD") {
+							return	"#AAB931"
+						} else if (feature.properties.TYPE === "Input Supplier") {
+							return	"#377eb8"
+						} else if (feature.properties.TYPE === "Processor") {
+							return	"#984ea3"
+						} else if (feature.properties.TYPE === "Trader") {
+							return	"#f781bf"
+						} else if (feature.properties.TYPE === "Consumer") {
+							return	"#a65628"
+						} 
 					}
 					var geojsonMarkerOptions = {
 						radius: 5,
@@ -281,7 +377,7 @@
 			});
 
 			// this can be any kind of omnivore layer
-			var dataset = omnivore.csv('./data/kcca-unicef.csv', null, omnivoreStyleHelper).on('ready', function() {
+			var dataset = omnivore.csv('./data/kcca_urbanAgValueChain.csv', null, omnivoreStyleHelper).on('ready', function() {
 				dataset.eachLayer(eachLayer);
 			});
 
@@ -295,6 +391,9 @@
 
 			$.getJSON('./data/distanceToMarket.geojson', function(data){
 
+				function onEachFeature(feature, featureLayer) {
+					featureLayer.bindPopup(feature.properties.Name + "km");
+				}
 				dataLayer3 = L.geoJson(data, {
 					style: function (feature) {
 						return {
@@ -304,7 +403,8 @@
 							fillOpacity: feature.properties.FromBreak / 3
 						}
 
-					}
+					},
+					onEachFeature: onEachFeature
 				})
 			});
 
@@ -315,13 +415,16 @@
 					if(!sidebarRight.isVisible()) {
 						sidebarRight.toggle();
 					}
+					
+					document.getElementById('parish').innerHTML = d.layer.feature.properties.pname;
+					document.getElementById('subCounty').innerHTML = d.layer.feature.properties.s;
 
 
 					d3.select('#sidebarRight').selectAll('svg').remove();
 					d3.select('#sidebarRight').selectAll('table').remove();
 
 					var dataset = [
-						{"label" : "Age Group (0-17)", "value" : d.layer.feature.properties.F_BA_0_17_},
+						{"title" : "Age Groups" ,"label" : "Age Group (0-17)", "value" : d.layer.feature.properties.F_BA_0_17_},
 						{"label" : "Age Group (18-30)", "value" : d.layer.feature.properties.F_18_30_GG},
 						{"label" : "Age Group (31-59)", "value" : d.layer.feature.properties.F_BA31_59},
 						{"label" : "Age Group (60+)", "value" : d.layer.feature.properties.F_BA60_}
@@ -331,7 +434,7 @@
 
 
 					var dataset1 = [
-						{"label" : "Iron Sheet", "value" : d.layer.feature.properties.Iron_sheet},
+						{"title" : "Roof Type", "label" : "Iron Sheet", "value" : d.layer.feature.properties.Iron_sheet},
 						{"label" : "Tiles", "value" : d.layer.feature.properties.Tiles},
 						{"label" : "Asbestos", "value" : d.layer.feature.properties.Asbestes},
 						{"label" : "Concrete", "value" : d.layer.feature.properties.Concrete},
@@ -342,7 +445,7 @@
 					drawChart(dataset1);
 
 					var dataset2 = [
-						{"label" : "Detatched Houses", "value" : d.layer.feature.properties.Detached_H},
+						{"title" : "Types of Structure", "label" : "Detatched Houses", "value" : d.layer.feature.properties.Detached_H},
 						{"label" : "Semi Detatched Houses", "value" : d.layer.feature.properties.Semi_Detac},
 						{"label" : "Multiple Rooms", "value" : d.layer.feature.properties.Room_Or_Ro},
 						{"label" : "Servant Quarters", "value" : d.layer.feature.properties.Servant_Qu},
@@ -353,7 +456,7 @@
 					drawChart(dataset2);
 
 					var dataset3 = [
-						{"label" : "Male Headed", "value" : d.layer.feature.properties.F_Mhhead},
+						{"title" : "Type of Household Head", "label" : "Male Headed", "value" : d.layer.feature.properties.F_Mhhead},
 						{"label" : "Female Headed", "value" : d.layer.feature.properties.F_Fhhead}
 					];
 
@@ -366,18 +469,18 @@
 					if(!sidebarRight.isVisible()) {
 						sidebarRight.toggle();
 					}
+					
+					document.getElementById('parish').innerHTML = d.layer.feature.properties.pname;
+					document.getElementById('subCounty').innerHTML = d.layer.feature.properties.s;
 
 
 					d3.select('#sidebarRight').selectAll('svg').remove();
-
 					d3.select('#sidebarRight').selectAll('table').remove();
 
 					var dataset = [
-						{"label" : "Greenspace", "value" : d.layer.feature.properties.greenSpace},
+						{"title" : "Percentage of GreenSpace", "label" : "Greenspace", "value" : d.layer.feature.properties.greenSpace},
 						{"label" : "Not Greenspace", "value" : 100 - d.layer.feature.properties.greenSpace}
 					];
-
-					console.log(dataset);
 
 					drawChart(dataset);
 				});
@@ -414,23 +517,149 @@
 					if(!sidebarRight.isVisible()) {
 						sidebarRight.toggle();
 					}
-
-
-					d3.select('#sidebarRight').selectAll('svg').remove();
-
-					d3.select('#sidebarRight').selectAll('table').remove();
+					
+					document.getElementById('parish').innerHTML = d.layer.feature.properties.pname;
+					document.getElementById('subCounty').innerHTML = d.layer.feature.properties.s;
 
 					var dataset = [
-						{"label" : "Males Interviewed", "value" : 11.86440677966102},
+						{"title" : "Male/Female Percentage", "label" : "Males Interviewed", "value" : 11.86440677966102},
 						{"label" : "Females Interviewed", "value" : 88.13559322033898}
 					];
 
 					drawChart(dataset);
+
+					var questions = [];
+					d3.select('#sidebarRight').select('table').remove();
+					d3.select('#sidebarRight').selectAll('svg').remove();
+
+					var table = d3.select('#sidebarRight').append('table')
+					var thead = table.append('thead')
+					var	tbody = table.append('tbody');
+
+					// append the header row
+					thead.append('tr')
+						.selectAll('th')
+						.data(['Question', 'Answer']).enter()
+						.append('th')
+						.text(function (column) { return column; });
+
+
+					d3.json('./data/questions.json', function (error, list) {
+
+						var dataset = [];
+						var arrayAnswers = [];
+
+						for (var i = 0; i < datasetFocusGroup.length; i++) {
+							if (d.layer.feature.properties.pname_small === datasetFocusGroup[i].RealParish_individual.toLowerCase()){
+
+								dataset.push(datasetFocusGroup[i]);
+
+							}
+						}
+
+
+						for (var j = 0; j < list.QuestionsList.length; j++) {
+							var q = list.QuestionsList[j].Question;
+							function arrayList() {
+								for (var k = 0; k < dataset.length; k++) {
+									arrayAnswers.push(dataset[k][list.QuestionsList[j].Question])
+								} 
+							}
+							arrayList(q);
+						}
+
+						var listAns = [], size = dataset.length;
+						while (arrayAnswers.length > 0)
+							listAns.push(arrayAnswers.splice(0, size));
+
+						for (var j = 0; j < list.QuestionsList.length; j++) {
+							var q = list.QuestionsList[j].Question;
+
+							questions.push({Question : q, Answer : listAns[j]})
+						}
+
+
+
+						// create a row for each object in the data
+						var rows = tbody.selectAll('tr')
+						.data(questions)
+						.enter()
+						.append('tr');
+
+						var cells = rows.selectAll('td')
+						.data(function (row) {
+							return ['Question', 'Answer'].map(function (column) {
+								return {column: column, value: row[column]};
+							});
+						})
+						.enter()
+						.append('td')
+						.text(function (d) {return d.value;});
+
+
+
+					});
+
+
 				});
 			});
 
 
+
+
 			var buttons = {
+				GreenSpace: L.easyButton({
+					position: 'topright',
+					states: [{
+						stateName: 'add-markers',
+						icon: '<img alt="GreenSpace" src="./css/images/leaf-solid.svg" height="40" width="40" align="left" style="opacity:0.4 "/><span id="textGreenspace" class="btn--text"><font color="black"><b>GreenSpace</b></font></span>',
+						title: 'add random markers',
+						onClick: function(control) {
+							map.addLayer(dataLayer1);
+							map.removeLayer(dataLayer);
+							map.removeLayer(dataLayer2);
+							map.removeLayer(markersIndividualProducers);
+							map.removeLayer(markersFocusGroupDiscussions);
+							map.removeLayer(markersInputSuppliers);
+							map.removeLayer(markersConsumers);
+							map.removeLayer(markersProcessors);
+							map.removeLayer(markersTraders);
+							map.removeLayer(markersMarkets);
+							map.removeLayer(markersHotels);
+							map.removeLayer(dataLayer3);
+							control.state('remove-markers');
+							buttons.focusGroupDiscussion.state('add-markers');
+							buttons.Grouping.state('add-markers');
+							buttons.Hotels.state('add-markers');
+							buttons.Markets.state('add-markers');
+							buttons.TrueStories.state('add-markers');
+
+
+							d3.select('#sidebarRight').selectAll('svg').remove();
+							d3.select('#sidebarRight').selectAll('table').remove();
+
+							var array = ['ffffff', '#ffffcc', '#c2e699', '#78c679', '#31a354', '#006837'];
+							var arrayLabel = ['% Area GreenSpace',"0% - 5%", "6% - 10%", "11% - 20%", "21% - 30%", "31% and above"];
+
+							addLegend(array, arrayLabel);
+
+							var dataset = [
+								{"title" : "Percentage of GreenSpace", "label" : "Greenspace", "value" : 9.086484227},
+								{"label" : "Not Greenspace", "value" : 90.913515773}
+							];
+
+							drawChart(dataset);
+						}
+					}, {
+						stateName: 'remove-markers',
+						icon: '<img alt="GreenSpace" src="./css/images/leaf-solid-On.svg" height="40" width="40" align="left"/><span id="textGreenspace" class="btn--text"><font color="black"><b>GreenSpace</b></font></span>',
+						onClick: function(control) {
+							map.removeLayer(dataLayer1);
+							control.state('add-markers');
+						},
+						title: 'remove markers'
+					}]
+				}),
 				Grouping: L.easyButton({
 					position: 'topright',
 					states: [{
@@ -443,6 +672,10 @@
 							map.removeLayer(dataLayer2);
 							map.removeLayer(markersIndividualProducers);
 							map.removeLayer(markersFocusGroupDiscussions);
+							map.removeLayer(markersInputSuppliers);
+							map.removeLayer(markersConsumers);
+							map.removeLayer(markersProcessors);
+							map.removeLayer(markersTraders);
 							map.removeLayer(markersMarkets);
 							map.removeLayer(dataLayer3);
 							map.removeLayer(markersHotels);
@@ -464,7 +697,7 @@
 							d3.select('#sidebarRight').selectAll('table').remove();
 
 							var dataset = [
-								{"label" : "Age Group (0-17)", "value" : 37.61752577},
+								{"title" : "Age Groups" ,"label" : "Age Group (0-17)", "value" : 37.61752577},
 								{"label" : "Age Group (18-30)", "value" : 37.45856907},
 								{"label" : "Age Group (31-59)", "value" : 22.70515464},
 								{"label" : "Age Group (60+)", "value" : 2.212371134}
@@ -474,7 +707,7 @@
 
 
 							var dataset1 = [
-								{"label" : "Iron Sheet", "value" : 81.05979381},
+								{"title" : "Roof Type","label" : "Iron Sheet", "value" : 81.05979381},
 								{"label" : "Tiles", "value" : 7.65257732},
 								{"label" : "Asbestos", "value" : 4.68556701},
 								{"label" : "Concrete", "value" : 5.853608247},
@@ -485,7 +718,7 @@
 							drawChart(dataset1);
 
 							var dataset2 = [
-								{"label" : "Detatched Houses", "value" : 21.06804124},
+								{"title" : "Types of Structure","label" : "Detatched Houses", "value" : 21.06804124},
 								{"label" : "Semi Detatched Houses", "value" : 23.91752577},
 								{"label" : "Multiple Rooms", "value" : 3.645360825},
 								{"label" : "Servant Quarters", "value" : 4.474226804},
@@ -496,7 +729,7 @@
 							drawChart(dataset2);
 
 							var dataset3 = [
-								{"label" : "Male Headed", "value" : 70.18247423},
+								{"title" : "Type of Household Head","label" : "Male Headed", "value" : 70.18247423},
 								{"label" : "Female Headed", "value" : 29.81752577}
 							];
 
@@ -507,54 +740,6 @@
 						stateName: 'remove-markers',
 						onClick: function(control) {
 							map.removeLayer(dataLayer);
-							control.state('add-markers');
-						},
-						title: 'remove markers'
-					}]
-				}),
-				GreenSpace: L.easyButton({
-					position: 'topright',
-					states: [{
-						stateName: 'add-markers',
-						icon: '<img alt="GreenSpace" src="./css/images/leaf-solid.svg" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>GreenSpace</b></font></span>',
-						title: 'add random markers',
-						onClick: function(control) {
-							map.addLayer(dataLayer1);
-							map.removeLayer(dataLayer);
-							map.removeLayer(dataLayer2);
-							map.removeLayer(markersIndividualProducers);
-							map.removeLayer(markersFocusGroupDiscussions);
-							map.removeLayer(markersMarkets);
-							map.removeLayer(markersHotels);
-							map.removeLayer(dataLayer3);
-							control.state('remove-markers');
-							buttons.focusGroupDiscussion.state('add-markers');
-							buttons.Grouping.state('add-markers');
-							buttons.Hotels.state('add-markers');
-							buttons.Markets.state('add-markers');
-							buttons.TrueStories.state('add-markers');
-
-
-							d3.select('#sidebarRight').selectAll('svg').remove();
-							d3.select('#sidebarRight').selectAll('table').remove();
-
-							var array = ['#ffffcc', '#c2e699', '#78c679', '#31a354', '#006837'];
-							var arrayLabel = ["0% - 5%", "6% - 10%", "11% - 20%", "21% - 30%", "31% and above"];
-
-							addLegend(array, arrayLabel);
-
-							var dataset = [
-								{"label" : "Greenspace", "value" : 9.086484227},
-								{"label" : "Not Greenspace", "value" : 90.913515773}
-							];
-
-							drawChart(dataset);
-						}
-					}, {
-						icon: '<img alt="GreenSpace" src="./css/images/leaf-solid-On.svg" height="40" width="40" align="left"/><span id="text" class="btn--text"><font color="black"><b>GreenSpace</b></font></span>',
-						stateName: 'remove-markers',
-						onClick: function(control) {
-							map.removeLayer(dataLayer1);
 							control.state('add-markers');
 						},
 						title: 'remove markers'
@@ -572,6 +757,10 @@
 							map.removeLayer(dataLayer1);
 							map.removeLayer(markersIndividualProducers);
 							map.removeLayer(markersFocusGroupDiscussions);
+							map.removeLayer(markersInputSuppliers);
+							map.removeLayer(markersConsumers);
+							map.removeLayer(markersProcessors);
+							map.removeLayer(markersTraders);
 							map.removeLayer(markersMarkets);
 							map.removeLayer(dataLayer3);
 							map.removeLayer(markersHotels);
@@ -593,7 +782,7 @@
 							d3.select('#sidebarRight').selectAll('table').remove();
 
 							var dataset = [
-								{"label" : "Males Interviewed", "value" : 11.86440677966102},
+								{"title" : "Male/Female Percentage", "label" : "Males Interviewed", "value" : 11.86440677966102},
 								{"label" : "Females Interviewed", "value" : 88.13559322033898}
 							];
 
@@ -617,10 +806,14 @@
 						title: 'add random markers',
 						onClick: function(control) {
 							map.addLayer(markersIndividualProducers);
+							map.addLayer(markersFocusGroupDiscussions);
+							map.addLayer(markersInputSuppliers);
+							map.addLayer(markersConsumers);
+							map.addLayer(markersProcessors);
+							map.addLayer(markersTraders);
 							map.removeLayer(dataLayer);
 							map.removeLayer(dataLayer1);
 							map.removeLayer(dataLayer2);
-							map.removeLayer(markersFocusGroupDiscussions);
 							map.removeLayer(markersMarkets);
 							map.removeLayer(markersHotels);
 							map.removeLayer(dataLayer3);
@@ -639,11 +832,11 @@
 							d3.select('#sidebarRight').selectAll('table').remove();
 
 							var dataset = [
-								{"label" : "Males Interviewed", "value" : 24.32432432432432},
+								{"title" : "Male/Female Percentage", "label" : "Males Interviewed", "value" : 24.32432432432432},
 								{"label" : "Females Interviewed", "value" : 75.67567567567568}
 							];
 
-							drawChart(dataset);
+//							drawChart(dataset);
 
 						}
 					}, {
@@ -651,6 +844,11 @@
 						stateName: 'remove-markers',
 						onClick: function(control) {
 							map.removeLayer(markersIndividualProducers);
+							map.removeLayer(markersFocusGroupDiscussions);
+							map.removeLayer(markersInputSuppliers);
+							map.removeLayer(markersConsumers);
+							map.removeLayer(markersProcessors);
+							map.removeLayer(markersTraders);
 							control.state('add-markers');
 						},
 						title: 'remove markers'
@@ -669,6 +867,10 @@
 							map.removeLayer(dataLayer2);
 							map.removeLayer(markersIndividualProducers);
 							map.removeLayer(markersFocusGroupDiscussions);
+							map.removeLayer(markersInputSuppliers);
+							map.removeLayer(markersConsumers);
+							map.removeLayer(markersProcessors);
+							map.removeLayer(markersTraders);
 							map.removeLayer(markersMarkets);
 							map.removeLayer(dataLayer3);
 							control.state('remove-markers');
@@ -714,6 +916,10 @@
 							map.removeLayer(dataLayer2);
 							map.removeLayer(markersIndividualProducers);
 							map.removeLayer(markersFocusGroupDiscussions);
+							map.removeLayer(markersInputSuppliers);
+							map.removeLayer(markersConsumers);
+							map.removeLayer(markersProcessors);
+							map.removeLayer(markersTraders);
 							map.removeLayer(markersHotels);
 							control.state('remove-markers');
 							buttons.focusGroupDiscussion.state('add-markers');
@@ -722,8 +928,8 @@
 							buttons.Hotels.state('add-markers');
 							buttons.TrueStories.state('add-markers');
 
-							var array = ['#2b8cbe', '#66c2a4'];
-							var arrayLabel = ["Mushrooms", "Leafy Vegetables"];
+							var array = ['#ffffff','#ced4c8','#9da991', '#6c7e5a', '#3b5323'];
+							var arrayLabel = ["0 - 1km", "1 - 2km", "2 - 3km", "3 - 4km", "4 - 5km"];
 
 							addLegend(array, arrayLabel);
 
@@ -750,8 +956,27 @@
 						},
 						title: 'remove markers'
 					}]
-				})
+				}),
+				Info: L.easyButton({
+					position: 'bottomright',
+					id: 'info',
+					states: [{
+						stateName: 'add-markers',
+						icon: '<img alt="Information" src="./css/images/info-solid.svg" height="20" width="20" align="left" style="opacity:0.4"/>',
+						title: 'add random markers',
+						onClick: function(control) {
+							control.state('remove-markers');
 
+						}
+					}, {
+						icon: '<img alt="Information" src="./css/images/info-solid-On.svg" height="20" width="20" align="left"/>',
+						stateName: 'remove-markers',
+						onClick: function(control) {
+							control.state('add-markers');
+						},
+						title: 'remove markers'
+					}]
+				})
 			}
 
 			function addLegend(array, arrayLabel) {
@@ -759,8 +984,8 @@
 				var legendSvg = d3.select('#legend')
 				.append('svg')
 				.attr('class', 'head')
-				.attr('width', 200)
-				.attr('height', 150);
+				.attr('width', 220)
+				.attr('height', 180);
 
 
 				var legendX = 0;
@@ -805,6 +1030,7 @@
 					.attr('class', 'legend-title')
 					.attr("x", legendX)
 					.attr("y", 0)
+					.attr("font-weight", "bold")
 					.attr("dy", "0.8em") //place text one line *below* the x,y point
 					.text(function (d, i) {
 					return d;
@@ -818,12 +1044,26 @@
 				.append("g")
 				.attr("height", "4vh");
 
+				var legendX = 0;
+				var legendDY = 20;
 				svg.append("g")
 					.attr("class", "slices");
 				svg.append("g")
 					.attr("class", "labels");
 				svg.append("g")
 					.attr("class", "lines");
+
+				svg.selectAll('.legend-title')
+					.data(dataset)
+					.enter()
+					.append('text')
+					.attr('class', 'legend-title')
+					.attr("x", '-10vh'	)
+					.attr("y", '-7vh')
+					.attr("dy", "0.8em") //place text one line *below* the x,y point
+					.text(function (d, i) {
+					return d.title;
+				});
 
 				var width = +(d3.select("#sidebarRight.leaflet-control").select('h1').style('width').slice(0, -2)),
 					height = +(d3.select("#sidebarRight.leaflet-control").select('h1').style('width').slice(0, -2)),
@@ -849,7 +1089,7 @@
 
 				var color = d3.scale.category20()
 				//				.domain(["Age Group (0-17)", "Age Group (18-30)", "Age Group (31-59)", "Age Group (60+)"])
-				//.range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+				.range(["#006837", "#c2e699", "#78c679", "#66c2a5",  "#8da0cb", "#e78ac3", "#ff8c00"]);
 
 
 				function Data (dataset){
@@ -927,8 +1167,9 @@
 						.append("text")
 						.attr("dy", ".35em")
 						.style("opacity", 0)
+						.style("font-size", "0.8em")
 						.text(function(d) {
-						return d.data.label;
+						return d.data.label + " (" + d.data.value.toFixed(1) + "%)" ;
 					})
 						.each(function(d) {
 						this._current = d;
@@ -1018,6 +1259,15 @@
 					buttons[key].addTo(map)
 				}
 			}
+
+		</script>
+		<script>
+			(function($){
+				setTimeout(function(){
+					$('#textGreenspace').click();
+				}, 1000);
+
+			})(jQuery)
 		</script>
 
 
