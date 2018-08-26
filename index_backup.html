@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html wtx-context="FF4526E2-E70C-44E5-900C-5575BADB43F5"><head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>KCCA-Urban Agriculture</title>
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+	<link rel="stylesheet" href="css/leaflet.css">
+	<link rel="stylesheet" href="css/L.css">
+	<script src="js/jquery-3.1.1.min.js"></script>
+	<link href='css/MarkerCluster.css' rel='stylesheet' />
+	<link href='css/MarkerCluster.Default.css' rel='stylesheet' />
+	<link rel="stylesheet" type="text/css" href="css/Sidebar.css">
+	<link href='css/easy-button.css' rel='stylesheet' />
+	<link href='css/icontext.css' rel='stylesheet' />
+
+	<!--[if lte IE 8]><link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.2/leaflet.ie.css" /><![endif]-->
+
+	<style>
+		body {
+			padding: 0;
+			margin: 0;
+		}
+
+		html, body, #map {
+			height: 100%;
+		}
+
+		.lorem {
+			font-style: italic;
+			color: #AAA;
+		}
+	</style>
+	</head>
+	<body>
+		<div id="sidebar"></div>
+
+
+
+
+
+		<div id="map"></div>
+
+		<script src="js/leaflet.js"></script>
+		<script src="js/L.js"></script>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/d3.v3.min.js"></script>
+		<script src='js/L.Control.Button.js'></script>
+		<script src='js/easy-button.js'></script>
+		<script src='js/leaflet.markercluster-src.js'></script>
+		<script src='js/leaflet-omnivore.js'></script>
+	<script type="text/javascript" src="js/Sidebar.js"></script>
+
+		<script>
+			var map = L.map('map');
+			map.setView([0.3193, 32.5953], 12);
+
+			L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png", {
+				maxZoom: 18,
+				attribution: 'Map data &copy; OpenStreetMap contributors'
+			}).addTo(map);
+
+			var sidebar = L.control.sidebar('sidebar', {
+				closeButton: true,
+				position: 'right'
+			});
+			map.addControl(sidebar);
+
+			var selected;
+
+			function style(feature) {
+				return {
+					color: '#00c5ff',
+					fillOpacity: 0
+				};
+			}
+
+			function selectedStyle(feature) {
+				return {
+					color: '#ff5500',
+					fillOpacity: 0,
+					zIndex:10000
+				};
+			}
+
+			function parishOnEachFeature(feature, featureLayer){
+
+				featureLayer.on({
+					click: function(e) {
+
+						selected = [];
+						selected.push(e.target.feature.properties.pname);
+						$.each(map._layers, function (ml) {
+							if(map._layers[ml].feature) {
+								map._layers[ml].setStyle(style());
+								map._layers[ml].feature.properties.selected = false;
+								map._layers[ml].bringToBack();
+							};
+						});
+
+						e.target.feature.properties.selected = true;
+						e.target.setStyle(selectedStyle());
+						e.target.bringToFront();
+
+
+						L.DomEvent.stopPropagation(e); // stop click event from being propagated further
+					}
+				});
+			}
+
+			var markersIndividualProducers = L.markerClusterGroup({
+				iconCreateFunction: function(cluster) {
+					var childCount = cluster.getChildCount();
+					return L.divIcon({className: 'EducationIcon clusterIcons', html: '<div><span>' + childCount + '</span></div>'});
+				},
+				polygonOptions: {
+					opacity: 0,
+					fillOpacity: 0
+				}
+			});
+
+
+			var icons = {
+				individualProducer: L.icon({
+					iconUrl: 'http://www.freeiconspng.com/uploads/orange-agriculture-icon-png-0.png',
+					iconSize: [32, 32],
+					iconAnchor: [15, 0],
+				})
+			}
+
+			var csv2geojsonOptions = {
+				latfield: 'Latitude',
+				lonfield: 'Longitude',
+				delimiter: ','
+			}
+
+			var individualProducers = L.geoJSON(null, {
+//				filter: individualProducerFilter,
+				pointToLayer: function (feature, latlng) {
+					console.log(feature);
+					return L.marker(latlng)
+				}
+			}).on('click', function(){
+				if(!sidebar.isVisible()) {
+					sidebar.toggle();
+				}
+			});
+
+			var dataset = omnivore.csv('./data/kcca-unicef_.csv', csv2geojsonOptions, individualProducers) .on('error', function(error) {
+    console.log(error);
+});;
+			
+
+			var dataLayer;
+
+			$.getJSON('./data/kampalaParishes.geojson', function(data){
+
+
+				dataLayer = L.geoJSON(data, {
+					style: style,
+					onEachFeature: parishOnEachFeature
+				}).on('click', function () {
+					if(!sidebar.isVisible()) {
+						sidebar.toggle();
+					}
+
+					d3.select('#sidebar').select('svg').remove();
+
+					for (var i = 0; i < data.features.length; i++) {
+						if(selected[0] === data.features[i].properties.pname) {
+							document.getElementById('parish').innerHTML = data.features[i].properties.pname;
+							document.getElementById('subCounty').innerHTML = data.features[i].properties.s;
+
+						}
+					}
+				});
+			});
+
+			map.on('click', function () {
+				sidebar.hide();
+				dataLayer.setStyle(style());
+			})
+
+			markersIndividualProducers.addLayer(individualProducers);
+
+
+			//button test
+
+			function individualProducerFilter(feature) {
+				console.log(feature);
+				if (feature.properties.TYPE === "Individual Producer") return true
+			}
+
+
+			var buttons = {
+				Agriculture: L.easyButton({
+					position: 'topright',
+					states: [{
+						stateName: 'add-markers',
+						icon: '<img alt="do this" src="http://www.freeiconspng.com/uploads/orange-agriculture-icon-png-0.png" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>Focus Group Discussions</b></font></span>',
+						title: 'add random markers',
+						onClick: function(control) {
+							map.addLayer(dataLayer);
+							control.state('remove-markers');
+						}
+					}, {
+						icon: '<img alt="do this" src="http://www.freeiconspng.com/uploads/orange-agriculture-icon-png-0.png" height="40" width="40" align="left"/><span id="text" class="btn--text"><font color="black"><b>Focus Group Discussions</b></font></span>',
+						stateName: 'remove-markers',
+						onClick: function(control) {
+							map.removeLayer(dataLayer);
+							control.state('add-markers');
+						},
+						title: 'remove markers'
+					}]
+				}),
+				individualProducer: L.easyButton({
+					position: 'topright',
+					states: [{
+						stateName: 'add-markers',
+						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>Individual Producers (farmers)</b></font></span>',
+						title: 'add random markers',
+						onClick: function(control) {
+							map.addLayer(individualProducers);
+							control.state('remove-markers');
+						}
+					}, {
+						icon: '<img alt="do this" src="http://l2020.org/wp-content/uploads/2016/11/icon-climate-change.png" height="40" width="40" align="left" /><span id="text" class="btn--text"><font color="black"><b>Individual Producers (farmers)</b></font></span>',
+						stateName: 'remove-markers',
+						onClick: function(control) {
+							map.removeLayer(individualProducers);
+							control.state('add-markers');
+						},
+						title: 'remove markers'
+					}]
+				})
+
+			}
+
+			// add the buttons. iterates over the buttons objects
+			for (var key in buttons) {
+				if (buttons.hasOwnProperty(key)) {
+					buttons[key].addTo(map)
+				}
+			}
+		</script>
+
+
+	</body></html>

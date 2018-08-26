@@ -1,0 +1,125 @@
+{
+    "storymap": {
+        "map_type": "zoomify",
+        "slides": [
+            {
+				"background": {			
+					"color": "#c4c0c0",
+					"opacity": 50
+				},
+                
+                "text": {
+                    "headline": "Kampala urban agriculture",
+                    "text": "Urban Agriculture is a very relevant practice in the contexts of food security, increasing income‐generating activities and creating a greener economy</p><p><strong>Walk through and read about some of the actors</strong>&nbsp;<br></span>"
+                },
+                "type": "overview"
+            },
+            
+             {
+                "date": "",
+                "location": {
+                    "icon": "http://maps.gstatic.com/intl/en_us/mapfiles/ms/micons/blue-pushpin.png",
+                    "lat": 66.79190947341796,
+                    "line": true,
+                    "lon": -85.4296875,
+                    "zoom": 4
+                },
+				"background": {			
+					"color": "#c4c0c0"
+				},
+                "media": {
+                
+                    "url": "file:///T:/Geo Gecko/2017/KCCA_Urban agriculture/portal/compiled_test/css/images/20180522_165640.jpg"
+                },
+                "text": {
+                    "headline": "Input supply",
+                    "text": "<span>This is where the value chain starts. Several supplies are needed for production to begin. <p>For leafy vegetables, the required inputs are fertilizer supplies (organic and foliar), pesticides, top soil, water, and to a lesser extent seeds and seedlings as farmers often use their own crops for this. <p>For mushrooms the required inputs are spawn, substrate and substrate additives, water, plastics/growing bags and firewood for heating the substrate.</span>"
+                }
+            },
+            
+            {
+                "date": "",
+                "location": {
+                    "icon": "http://maps.gstatic.com/intl/en_us/mapfiles/ms/micons/blue-pushpin.png",
+                    "lat": 37.7185903255881677,
+                    "line": true,
+                    "lon": -35.5078125,
+                    "zoom": 4
+                },
+				"background": {			
+					"color": "#c4c0c0"
+				},
+                "media": {
+                    
+                
+                    "url": "file:///T:/Geo Gecko/2017/KCCA_Urban agriculture/portal/compiled_test/css/images/REV. Bwami.jpg"
+                },
+                "text": {
+                    "headline": "Production stage",
+                    "text": "<span>The production stage of the value chain is driven by the urban farmers. <p>For leafy vegetables, this stage involves preparation gardening, vegetable planting, crop management, harvesting and initial sorting and grading for the market. <p>For mushrooms, it involves soaking, sorting and fermentation, sterilization of substrate, spawning, watering, regulating temperature and humidity and then harvesting.</span>"
+                }
+            },
+            {
+                "date": "",
+				"background": {			
+					"color": "#c4c0c0"
+				},
+                "location": {
+                    "icon": "http://maps.gstatic.com/intl/en_us/mapfiles/ms/micons/blue-pushpin.png",
+                    "lat": -9.96885060854611,
+                    "line": true,
+                    "lon": 15.468749999999998,
+                    "zoom": 4
+                },
+                "media": {
+                    
+                
+                    "url": "file:///T:/Geo Gecko/2017/KCCA_Urban agriculture/portal/compiled_test/css/images/trading.jpg"
+                },
+                "text": {
+                    "headline": "Trading and processing",
+                    "text": "<span>Most leafy vegetables grown in Kampala are traded in an informal circuit and are consumed by the farmers themselves. The produce that reaches the market competes with large volumes of vegetables brought in from outside Kampala city. <p>Mushroom traders grade, package and label the crop since it’s mostly sold to larger scale consumers who prefer a product that meets minimum standards of appearance and packaging. Produce that is not suitable for the market is either sun-dried or distributed informally.</span>"
+                }
+            },
+            {
+                "date": "",
+                "location": {
+                    "use_custom_marker": true,
+                    "icon": "http://maps.gstatic.com/intl/en_us/mapfiles/ms/micons/blue-pushpin.png",
+                    "lat": -51.39920565355377,
+                    "line": true,
+                    "lon": 65.654296875,
+                    "zoom": 4
+                },
+				"background": {			
+					"color": "#c4c0c0"
+				},
+                "media": {
+                    
+                
+                    "url": "https://agra.org/news/wp-content/uploads/2018/04/food-table-790x593.jpg"
+                },
+                "text": {
+                    "headline": "Consumption",
+                    "text": "<span>There is high demand for mushroom and leafy vegetables in Kampala city with estimates of about 43800 tons for leafy vegetables annually and 202,400kg of mushroom annually. <p>Consumers of mushrooms are hotels, supermarkets, individuals and institutions, such as offices. The consumers of leafy vegetables are hotels, supermarkets, schools, restaurants, community stalls and traders among others. </span>"
+                }
+            },{
+				"background": {			
+					"url": 	"http://www.premierlife.ca/wp-content/uploads/2012/11/Arya-Stark-arya-stark-25155750-818-1000.png",
+					"color": "#c4c0c0",
+					"opacity": 50
+				},
+				"media": {
+        
+
+                    "url": "https://seeklogo.com/images/K/kcca-kampala-capital-city-authority-logo-455486392C-seeklogo.com.png"
+                },
+                "text": {
+                    "headline": "Want to know more?",
+                   "text": "Read the report<a href='file:///T:/Geo Gecko/2017/KCCA_Urban agriculture/portal/compiled_test/css/documents/GG_KCCA_01_UA Value Chain Analysis Report_FINAL_VERSION_2.pdf'>Click to download</a>"
+                },
+                "type": "overview"
+            }
+        ]
+    }
+}

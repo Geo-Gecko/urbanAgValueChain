@@ -1,0 +1,26 @@
+[ {
+	"key" : "Mushrooms", "values": [
+				{
+					"key": "Input Suppliers",
+					"value" : 0,
+					"valueAdded" : "Producing ready‐made mushroom gardens, Training farmers"
+				},
+				{
+					"key": "Producer",
+					"value" : 2650,
+					"valueAdded" : "Production, Harvesting, Cleaning and sorting, Packaging"
+				},
+				{
+					"key": "Trader [Retail]/Trader [Restaurant]",
+					"value" : 1250,
+					"valueAdded" : "Bulking, Transportation, Sorting and re‐packaging"
+				},
+				{
+					"key": "Consumer",
+					"value" : 1750,
+					"valueAdded" : "Re‐packaging, Branding, Cooling, Preparing mushrooms in different meals"
+				}	
+			] 
+		
+}
+]	

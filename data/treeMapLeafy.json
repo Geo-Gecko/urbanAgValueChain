@@ -1,0 +1,30 @@
+[ {
+	"key" : "Leafy Vegetables", "values": [
+				{
+					"key": "Input Suppliers",
+					"value" : 0,
+					"valueAdded" : "Seeds, Seedling, Top soil, Pesticides, Fertilisers"
+				},
+				{
+					"key": "Producer",
+					"value" : 500,
+					"valueAdded" : "Production, Harvesting, Cleaning and sorting, Packaging"
+				},
+				{
+					"key": "Trader [Retail]",
+					"value" : 500,
+					"valueAdded" : "Bulking, Transportation, Sorting and re‐packaging"
+				},
+				{
+					"key": "Trader [Restaurant]",
+					"value" : 2000,
+					"valueAdded" : "Re‐packaging, Branding, Cooling, Preparing vegetation in different meals"
+				},
+				{
+					"key": "Consumer",
+					"value" : 0,
+					"valueAdded" : "Re‐packaging, Preparing vegetables in different recipes"
+				}	
+			]
+}
+]	
