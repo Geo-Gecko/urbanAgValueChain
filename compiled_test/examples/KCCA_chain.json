@@ -29,7 +29,7 @@
 				},
                 "media": {
                 
-                    "url": "file:///T:/Geo Gecko/2017/KCCA_Urban agriculture/portal/compiled_test/css/images/20180522_165640.jpg"
+                    "url": "../css/images/20180522_165640.jpg"
                 },
                 "text": {
                     "headline": "Input supply",
@@ -52,7 +52,7 @@
                 "media": {
                     
                 
-                    "url": "file:///T:/Geo Gecko/2017/KCCA_Urban agriculture/portal/compiled_test/css/images/REV. Bwami.jpg"
+                    "url": "../css/images/REV. Bwami.jpg"
                 },
                 "text": {
                     "headline": "Production stage",
@@ -74,7 +74,7 @@
                 "media": {
                     
                 
-                    "url": "file:///T:/Geo Gecko/2017/KCCA_Urban agriculture/portal/compiled_test/css/images/trading.jpg"
+                    "url": "../css/images/trading.jpg"
                 },
                 "text": {
                     "headline": "Trading and processing",
@@ -116,7 +116,7 @@
                 },
                 "text": {
                     "headline": "Want to know more?",
-                   "text": "Read the report<a href='file:///T:/Geo Gecko/2017/KCCA_Urban agriculture/portal/compiled_test/css/documents/GG_KCCA_01_UA Value Chain Analysis Report_FINAL_VERSION_2.pdf'>Click to download</a>"
+                   "text": "Read the report<a href='../css/documents/GG_KCCA_01_UA Value Chain Analysis Report_FINAL_VERSION_2.pdf'>Click to download</a>"
                 },
                 "type": "overview"
             }
