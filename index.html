@@ -39,6 +39,9 @@
 		<div id="legend"></div>
 		<div id="sidebarRight">
 			<h1 id="h1element"></h1>
+			<p><strong>Selected Parish: </strong><span id='parish'></span>
+				<br>
+				<strong>Selected SubCounty: </strong><span id='subCounty'></span></p>
 		</div>	
 		<div id="map"></div>
 
@@ -468,9 +471,12 @@
 				}).addTo(map)
 
 				dataLayer1.on('click', function (d) {
+					console.log(d);
+					console.log(sidebarRight);
 					if(!sidebarRight.isVisible()) {
 						sidebarRight.toggle();
 					}
+					
 
 					document.getElementById('parish').innerHTML = d.layer.feature.properties.pname;
 					document.getElementById('subCounty').innerHTML = d.layer.feature.properties.s;
@@ -876,10 +882,6 @@
 							buttons.Markets.state('add-markers');
 							buttons.TrueStories.state('add-markers');
 							
-							document.getElementById('sidebarRight').insertAdjacentHTML('afterend', "<p><strong>Selected Parish: </strong><span id='parish'></span>"+
-																									+"<br>"+
-																					   				+"<strong>Selected SubCounty: </strong><span id='subCounty'></span></p>" );
-
 
 							d3.select('#sidebarRight').selectAll('svg').remove();
 							d3.select('#sidebarRight').selectAll('table').remove();
@@ -937,9 +939,7 @@
 							var arrayLabel = ["Group: 1", "Group: 2", "Group: 3", "Group: 4"];
 
 							addLegend(array, arrayLabel);
-							document.getElementById('sidebarRight').insertAdjacentHTML('afterend', "<p><strong>Selected Parish: </strong><span id='parish'></span>"+
-																									+"<br>"+
-																					   				+"<strong>Selected SubCounty: </strong><span id='subCounty'></span></p>" );
+							
 
 
 							d3.select('#sidebarRight').selectAll('svg').remove();
@@ -1026,9 +1026,7 @@
 
 							addLegend(array, arrayLabel);
 
-							document.getElementById('sidebarRight').insertAdjacentHTML('afterend', "<p><strong>Selected Parish: </strong><span id='parish'></span>"+
-																									+"<br>"+
-																					   				+"<strong>Selected SubCounty: </strong><span id='subCounty'></span></p>" );
+							
 							
 							d3.select('#sidebarRight').selectAll('svg').remove();
 							d3.select('#sidebarRight').selectAll('table').remove();
@@ -1138,9 +1136,7 @@
 								sidebarRight.toggle();
 							}
 
-							document.getElementById('h1Element').insertAdjacentHTML('afterend', "<p><strong>Selected Parish: </strong><span id='parish'></span>"+
-																									+"<br>"+
-																					   				+"<strong>Selected SubCounty: </strong><span id='subCounty'></span></p>" );
+							
 							d3.select('#sidebarRight').selectAll('svg').remove();
 							d3.select('#sidebarRight').selectAll('table').remove();
 
@@ -1235,7 +1231,7 @@
 					position: 'topright',
 					states: [{
 						stateName: 'add-markers',
-						icon: '<img alt="Markets" src="./css/images/money-bill-wave-solid.svg" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>Profit in Value Chain</b></font></span>',
+						icon: '<img alt="Markets" src="./css/images/money-bill-wave-solid.svg" height="40" width="40" align="left" style="opacity:0.4 "/><span id="text" class="btn--text"><font color="black"><b>Sales Price</b></font></span>',
 						title: 'add random markers',
 						onClick: function(control) {
 							control.state('remove-markers');
@@ -1270,7 +1266,7 @@
 
 						}
 					}, {
-						icon: '<img alt="Markets" src="./css/images/money-bill-wave-solid.svg" height="40" width="40" align="left"/><span id="text" class="btn--text"><font color="black"><b>Profit in Value Chain</b></font></span>',
+						icon: '<img alt="Markets" src="./css/images/money-bill-wave-solid.svg" height="40" width="40" align="left"/><span id="text" class="btn--text"><font color="black"><b>Sales Price</b></font></span>',
 						stateName: 'remove-markers',
 						onClick: function(control) {
 							control.state('add-markers');
@@ -1294,11 +1290,9 @@
 //
 //							d3.select('#sidebarRight').selectAll('svg').remove();
 //
-							document.getElementById('sidebarRight').insertAdjacentHTML('afterend', "<p><strong>Selected Parish: </strong><span id='parish'></span>"+
-																									+"<br>"+
-																					   				+"<strong>Selected SubCounty: </strong><span id='subCounty'></span></p>" )
+							
 
-							d3.select('#sidebarRight').select('p').remove();
+//							d3.select('#sidebarRight').select('p').remove();
 							
 							window.open("./compiled_test/examples/index.html", "_blank", "toolbar=yes,top=500,left=500");
 							
