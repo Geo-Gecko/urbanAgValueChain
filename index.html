@@ -1279,41 +1279,8 @@
 						title: 'remove markers'
 					}]
 				}),
-				valueChain: L.easyButton({
-					position: 'topright',
-					states: [{
-						stateName: 'add-markers',
-						icon: '<img alt="Markets" src="./css/images/link-solid.svg" height="40" width="40" align="left" style="opacity:0.4"/><span id="text" class="btn--text"><font color="black"><b>See the Value Chain</b></font></span>',
-						title: 'add random markers',
-						onClick: function(control) {
-							control.state('remove-markers');
-							if(sidebarRight.isVisible()) {
-								sidebarRight.toggle();
-							}
-							//
-							//							d3.select('#sidebarRight').selectAll('svg').remove();
-							//
-
-
-							//							d3.select('#sidebarRight').select('p').remove();
-
-							window.open("./compiled_test/examples/index.html", "_blank", "toolbar=yes,top=500,left=500");
-
-
-
-						}
-					}, {
-						icon: '<img alt="Markets" src="./css/images/link-solid.svg" height="40" width="40" align="left"/><span id="text" class="btn--text"><font color="black"><b>Value Chain</b></font></span>',
-						stateName: 'remove-markers',
-						onClick: function(control) {
-							control.state('add-markers');
-							if(sidebarRight.isVisible()) {
-								sidebarRight.toggle();
-							}
-							window.open("./compiled_test/examples/index.html", "_blank", "toolbar=yes,top=500,left=500");
-						},
-						title: 'remove markers'
-					}]
+				valueChain: L.easyButton('<img alt="Markets" src="./css/images/link-solid.svg" height="40" width="40" align="left"/><span id="text" class="btn--text"><font color="black"><b>See the Value Chain</b></font></span>', function(){
+					window.open("./compiled_test/examples/index.html", "_blank");
 				}),
 				Info: L.easyButton({
 					position: 'bottomright',
