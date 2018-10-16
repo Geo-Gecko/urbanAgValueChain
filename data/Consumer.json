@@ -1,0 +1,29 @@
+{
+	"QuestionsList": [
+		{"Question" : "What produce do you buy_Consumers"},
+{"Question" : "Whom do you commonly purchase mushroom from?_Consumers"},
+{"Question" : "Whom do you commonly purchase vegetables from?_Consumers"},
+{"Question" : "How often to do purchase these mushrooms_Consumers"},
+{"Question" : "How often to do purchase these vegetables_Consumers"},
+{"Question" : "What amount of mushrooms do you buy daily?_Consumers"},
+{"Question" : "What amount of vegetables do you buy daily?_Consumers"},
+{"Question" : "What amount of mushrooms do you buy weekly?_Consumers"},
+{"Question" : "What amount of mushrooms do you buy bi-weekly?_Consumers"},
+{"Question" : "What amount of vegetables do you buy weekly?_Consumers"},
+{"Question" : "In what form do you purchase mushrooms_Consumers"},
+{"Question" : "At what price per kilo do you purchase mushrooms fresh_Consumers"},
+{"Question" : "At what price per kilo do you purchase mushrooms dry_Consumers"},
+{"Question" : "At what price do you purchase a bundle of leafy vegetable_Consumers"},
+{"Question" : "Are you able to get the mushrooms all year round_Consumers"},
+{"Question" : "Are you able to get the leafy vegetables all year round_Consumers"},
+{"Question" : "How does the supply of mushrooms fluctuate_Consumers"},
+{"Question" : "Do the mushroom products meet your expectations_Consumers"},
+{"Question" : "Do the vegetable products meet your expectations_Consumers"},
+{"Question" : "What challenges do you face in purchasing these mushroom products_Consumers"},
+{"Question" : "What challenges do you face in purchasing these vegetable products_Consumers"},
+{"Question" : "What improvements would you like to see in the mushroom industry_Consumers"},
+{"Question" : "How do see the mushroom / Vegetable industry in 3 years from today_Consumers"},
+{"Question" : "What proposals do you have to this industry's progress_Consumers"},
+{"Question" : "_Consumers"}
+]
+}

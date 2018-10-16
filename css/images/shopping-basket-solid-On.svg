@@ -1,1 +1,57 @@
-<svg aria-hidden="true" data-prefix="fas" data-icon="shopping-basket" class="svg-inline--fa fa-shopping-basket fa-w-18" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="#3B5323" d="M576 216v16c0 13.255-10.745 24-24 24h-8l-26.113 182.788C514.509 462.435 494.257 480 470.37 480H105.63c-23.887 0-44.139-17.565-47.518-41.212L32 256h-8c-13.255 0-24-10.745-24-24v-16c0-13.255 10.745-24 24-24h67.341l106.78-146.821c10.395-14.292 30.407-17.453 44.701-7.058 14.293 10.395 17.453 30.408 7.058 44.701L170.477 192h235.046L326.12 82.821c-10.395-14.292-7.234-34.306 7.059-44.701 14.291-10.395 34.306-7.235 44.701 7.058L484.659 192H552c13.255 0 24 10.745 24 24zM312 392V280c0-13.255-10.745-24-24-24s-24 10.745-24 24v112c0 13.255 10.745 24 24 24s24-10.745 24-24zm112 0V280c0-13.255-10.745-24-24-24s-24 10.745-24 24v112c0 13.255 10.745 24 24 24s24-10.745 24-24zm-224 0V280c0-13.255-10.745-24-24-24s-24 10.745-24 24v112c0 13.255 10.745 24 24 24s24-10.745 24-24z"></path></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   id="Layer_1"
+   x="0px"
+   y="0px"
+   width="960px"
+   height="560px"
+   viewBox="0 0 960 560"
+   enable-background="new 0 0 960 560"
+   xml:space="preserve"
+   sodipodi:docname="shopping-basket-solid-On.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"><metadata
+   id="metadata9"><rdf:RDF><cc:Work
+       rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+         rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+   id="defs7"><pattern
+     y="0"
+     x="0"
+     height="6"
+     width="6"
+     patternUnits="userSpaceOnUse"
+     id="EMFhbasepattern" /></defs><sodipodi:namedview
+   pagecolor="#ffffff"
+   bordercolor="#666666"
+   borderopacity="1"
+   objecttolerance="10"
+   gridtolerance="10"
+   guidetolerance="10"
+   inkscape:pageopacity="0"
+   inkscape:pageshadow="2"
+   inkscape:window-width="927"
+   inkscape:window-height="1048"
+   id="namedview5"
+   showgrid="false"
+   inkscape:zoom="0.33020833"
+   inkscape:cx="456.80302"
+   inkscape:cy="280"
+   inkscape:window-x="984"
+   inkscape:window-y="0"
+   inkscape:window-maximized="0"
+   inkscape:current-layer="Layer_1" />
+
+<path
+   id="path835"
+   d="m 778.59723,208.06551 v 15.99988 c 0,13.2799 -10.71992,23.99982 -23.99982,23.99982 h -7.99994 l -26.07981,182.79865 c -3.43997,23.59982 -23.67982,41.19969 -47.51964,41.19969 h -364.7973 c -23.83982,0 -44.07967,-17.59987 -47.51965,-41.19969 l -26.0798,-182.79865 h -7.99994 c -13.2799,0 -23.99983,-10.71992 -23.99983,-23.99982 v -15.99988 c 0,-13.2799 10.71993,-23.99983 23.99983,-23.99983 h 67.3595 L 400.76003,37.266772 c 10.31993,-14.319894 30.39978,-17.439871 44.63967,-7.039948 14.3199,10.319924 17.43987,30.399775 7.11995,44.63967 L 373.08024,184.06568 H 608.1185 L 528.75908,74.866494 c -10.39992,-14.239895 -7.27994,-34.319746 7.03995,-44.63967 14.2399,-10.399923 34.31975,-7.279946 44.71967,7.039948 L 687.23791,184.06568 h 67.3595 c 13.2799,0 23.99982,10.71993 23.99982,23.99983 z M 514.59919,384.0642 V 272.06503 c 0,-13.2799 -10.71992,-23.99982 -23.99982,-23.99982 -13.2799,0 -23.99983,10.71992 -23.99983,23.99982 V 384.0642 c 0,13.2799 10.71993,23.99983 23.99983,23.99983 13.2799,0 23.99982,-10.71993 23.99982,-23.99983 z m 111.99917,0 V 272.06503 c 0,-13.2799 -10.71992,-23.99982 -23.99982,-23.99982 -13.2799,0 -23.99983,10.71992 -23.99983,23.99982 V 384.0642 c 0,13.2799 10.71993,23.99983 23.99983,23.99983 13.2799,0 23.99982,-10.71993 23.99982,-23.99983 z m -223.99834,0 V 272.06503 c 0,-13.2799 -10.71992,-23.99982 -23.99982,-23.99982 -13.27991,0 -23.99983,10.71992 -23.99983,23.99982 V 384.0642 c 0,13.2799 10.71992,23.99983 23.99983,23.99983 13.2799,0 23.99982,-10.71993 23.99982,-23.99983 z"
+   style="fill:#3b5323;fill-opacity:1;fill-rule:nonzero;stroke:none"
+   inkscape:connector-curvature="0" /></svg>

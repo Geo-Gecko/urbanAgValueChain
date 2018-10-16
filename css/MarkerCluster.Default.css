@@ -40,7 +40,7 @@ body {
 }
 
 .Marketsicon{
-  background: #3B5323;
+  background: #76a646;
 }
 
 .projectImage {
@@ -68,7 +68,7 @@ body {
   border: 2px solid rgba(255,255,255,0.5);
   opacity: 0.85;
 	text-align: center;
-	font: 12px "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font: 12px "Roboto";
 	line-height: 100%;
   width: 24px !important;
   height: 24px !important;

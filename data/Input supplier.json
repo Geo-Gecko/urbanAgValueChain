@@ -1,0 +1,26 @@
+{
+	"QuestionsList": [
+		{"Question" : "What major inputs do you supply_InputSupplier"},
+{"Question" : "What are the major sources of the other inputs_InputSupplier"},
+{"Question" : "Who are your most important buyers of this other_InputSupplier"},
+{"Question" : "What are the major sources of your spawn supplies_InputSupplier"},
+{"Question" : "Who are your most important buyers of spawn_InputSupplier"},
+{"Question" : "At what price do you sell spawn to the producer_InputSupplier"},
+{"Question" : "At what price do you sell spawn to the trader_InputSupplier"},
+{"Question" : "At what price do you sell spawn to the other buyer_InputSupplier"},
+{"Question" : "What are the major sources of your substrate supplies_InputSupplier"},
+{"Question" : "Who are your most important buyers of substrate_InputSupplier"},
+{"Question" : "At what price do you sell substrate to the producer_InputSupplier"},
+{"Question" : "What are the major sources of your mushroom garden supplies_InputSupplier"},
+{"Question" : "What are the other sources of mushroom gardens_InputSupplier"},
+{"Question" : "Who are your most important buyers of mushroom gardens_InputSupplier"},
+{"Question" : "At what price do you sell mushroom gardens to the producer_InputSupplier"},
+{"Question" : "Are supplies available all year round?_InputSupplier"},
+{"Question" : "What other services do you offer to your clients_InputSupplier"},
+{"Question" : "Who sets standards for the inputs you supply_InputSupplier"},
+{"Question" : "Other standard setters_InputSupplier"},
+{"Question" : "What are the main challenges facing this industry_InputSupplier"},
+{"Question" : "Other challenges_InputSupplier"},
+{"Question" : "How can these challenges be minimized_InputSupplier"}
+]
+}
